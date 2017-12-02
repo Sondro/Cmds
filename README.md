@@ -1,4 +1,4 @@
-# [Cmd](https://github.com/Sondro/Cmds): _Useful Command-lines for Programming_
+# **[Cmd]**(https://github.com/Sondro/Cmds): _Useful Command-lines for Programming_
 
 ### To-Do:
 1. Convert bat to bash (possibly using Batsh)
