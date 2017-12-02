@@ -3,7 +3,7 @@
 
 Common/Useful Commands for Programming 
 
---------------------------------------------------
+==================================================
 
 **To-Do:**
 1. Convert bat to bash (possibly using Batsh)
