@@ -1,4 +1,4 @@
-<h1><strong><a href = "https://github.com/Sondro/Cmds"></strong>Cmd: <i>Useful Command-lines for Programming</i></h1>
+<h1><strong><a href = "https://github.com/Sondro/Cmds"></strong>Cmds</a>:<i>Useful Command-lines for Programming</i></h1>
 
 ### To-Do:
 1. Convert bat to bash (possibly using Batsh)
