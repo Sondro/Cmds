@@ -1,6 +1,6 @@
 --------------------------------------------------
 
-### [Cmds](https://github.com/Sondro/Cmds): Useful Command-lines for Programming
+### [CMDS](https://github.com/Sondro/Cmds): Useful Command-lines for Programming
 
 --------------------------------------------------
 
