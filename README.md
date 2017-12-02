@@ -1,4 +1,4 @@
-# [Cmd](https://github.com/Sondro/Cmds): 
+# [Cmds](https://github.com/Sondro/Cmds): 
 _Useful Command-lines for Programming_
 
 ### To-Do:
