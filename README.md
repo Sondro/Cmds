@@ -1,6 +1,5 @@
-<h1><a href = "https://github.com/Sondro/Cmds">Cmds:</emphasis></a></h1> <i>Useful Command-lines for Programming</i>
-
-
+<h1><a href = "https://github.com/Sondro/Cmds">Cmds:</emphasis></a></h1> 
+_Useful Command-lines for Programming_
 
 **To-Do:**
 1. Convert bat to bash (possibly using Batsh)
