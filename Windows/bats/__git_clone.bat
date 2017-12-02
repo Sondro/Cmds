@@ -1,3 +1,3 @@
-git clone url https://www.github.com/lambdaschool/Data-Structures-II
+git clone url https://www.github.com/yourGit/Data-Structures-II
 
 @pause
