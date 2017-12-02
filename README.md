@@ -1,4 +1,4 @@
-#[Cmd](https://github.com/Sondro/Cmds)
+# [Cmd](https://github.com/Sondro/Cmds)
 
 _Useful Command-lines for Programming_
 
