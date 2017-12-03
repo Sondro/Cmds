@@ -5,7 +5,7 @@ _Useful Command-lines for Programming_
 ```
 1. Fast demoing or use for non-programmers and others short on time.
 
-   *[!]* A good example would be in Java where most users don't hava Java 
+    [!] A good example would be in Java where most users don't hava Java 
     set in their path and can't run .jars by double clicking them 
     (and thus need a .bat or they have an unusable program).
 
