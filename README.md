@@ -23,6 +23,9 @@ II. Speed development for developers.
 1. node
 2. npm
 3. yarn
+4. nodemon
+5. webpack
+6. react
 ```
 #### Servers/Databases
 ```
