@@ -30,6 +30,7 @@ II. Speed development for developers.
 #### Servers/Databases
 ```
 1. MongoDB
+2. mySQL
 ```
 #### Java
 ```
