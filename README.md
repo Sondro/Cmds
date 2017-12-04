@@ -4,11 +4,6 @@ _Useful Command-lines for Programming_
 ### Purpose:
 ```
 1. Fast demoing or use for non-programmers and others short on time.
-
-    [!] A good example would be in Java where most users don't have 
-    Java configured with .jar archives to run on double-click 
-    (and thus need a .bat or they have an unusable program).
-
 2. Speed development for developers.
 ```
 ### To-Do:
@@ -16,4 +11,22 @@ _Useful Command-lines for Programming_
 1. Convert bat to bash (possibly using Batsh)
 2. Add more MongoDB/Node cmds
 3. Make reference doc
+```
+### Current Support:
+```
+1. git
+```
+#### JavaScript 
+```
+2. node
+3. npm
+4. yarn
+```
+#### Servers/Databases
+```
+5. MongoDB
+```
+#### Java
+```
+6. Java
 ```
