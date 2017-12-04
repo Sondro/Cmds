@@ -3,14 +3,14 @@ _Useful Command-lines for Programming_
 
 ### Purpose:
 ```
-1. Fast demoing or use for non-programmers and others short on time.
-2. Speed development for developers.
+I. Fast demoing or use for non-programmers and others short on time.
+II. Speed development for developers.
 ```
 ### To-Do:
 ```
-1. Convert bat to bash (possibly using Batsh)
-2. Add more MongoDB/Node cmds
-3. Make reference doc
+[+] Convert bat to bash (possibly using Batsh)
+[+] Add more MongoDB/Node cmds
+[+] Make reference doc
 ```
 ### Current Support:
 
