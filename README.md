@@ -13,20 +13,22 @@ _Useful Command-lines for Programming_
 3. Make reference doc
 ```
 ### Current Support:
+
+#### Version Control
 ```
 1. git
 ```
 #### JavaScript 
 ```
-2. node
-3. npm
-4. yarn
+1. node
+2. npm
+3. yarn
 ```
 #### Servers/Databases
 ```
-5. MongoDB
+1. MongoDB
 ```
 #### Java
 ```
-6. Java
+1. jar archives
 ```
