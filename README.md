@@ -3,7 +3,7 @@ _Useful Command-lines for Programming_
 
 ### Purpose:
 ```
-I. Fast demoing or use for non-programmers and others short on time.
+I. Rapid deployment for non-programmers and others short on time.
 II. Speed development for developers.
 ```
 ### To-Do:
