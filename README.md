@@ -26,11 +26,15 @@ II. Speed development for developers.
 4. nodemon
 5. webpack
 6. react
+7. node-gyp
+8. node-pre-gyp
+9. knex
 ```
 #### Servers/Databases
 ```
 1. MongoDB
 2. mySQL
+3. SQLite
 ```
 #### Java
 ```
