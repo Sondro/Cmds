@@ -1,0 +1,2 @@
+knex migrate:latest
+@pause
