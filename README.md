@@ -30,7 +30,7 @@ II. Speed development for developers.
 8. node-pre-gyp
 9. knex
 ```
-#### Servers/Databases
+#### Databases
 ```
 1. MongoDB
 2. mySQL
