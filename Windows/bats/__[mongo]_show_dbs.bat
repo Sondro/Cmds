@@ -1,3 +1,0 @@
-mongo
-show dbs
-@pause
