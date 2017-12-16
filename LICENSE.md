@@ -1,5 +1,5 @@
 # [MIT License](https://opensource.org/licenses/MIT)
-_Copyright Â© 2017_ 
+_Copyright © 2017_ 
 
 ```
 Permission is hereby granted, free of charge, to any person obtaining a copy
