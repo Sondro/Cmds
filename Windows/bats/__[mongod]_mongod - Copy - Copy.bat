@@ -1,2 +1,0 @@
-mongod -show dbs
-@pause
