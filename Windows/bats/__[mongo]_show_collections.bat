@@ -1,0 +1,3 @@
+mongo
+show collections
+@pause

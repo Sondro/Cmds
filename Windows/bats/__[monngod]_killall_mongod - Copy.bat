@@ -1,0 +1,2 @@
+killall mongod
+@pause
