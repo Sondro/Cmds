@@ -1,2 +1,2 @@
-mongo --eval "printjson(db.serverStatus())"
+mongo --eval "printjson(db.serverStatus());"
 @pause

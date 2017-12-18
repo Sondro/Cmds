@@ -1,2 +1,2 @@
-mongo mongo --eval 'printjson(db.test.update());'
+mongo mongo --eval "printjson(db.test.update());"
 @pause

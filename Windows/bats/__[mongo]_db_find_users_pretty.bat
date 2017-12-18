@@ -1,2 +1,2 @@
-mongo --eval 'db.users.find({a:"b"}).pretty().shellPrint();'
+mongo --eval "db.users.find({a:'b'}).pretty().shellPrint();"
 @pause
