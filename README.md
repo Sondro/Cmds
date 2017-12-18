@@ -40,3 +40,7 @@ II. Speed development for developers.
 ```
 1. jar archives
 ```
+#### Credits
+```
+[JREPL.BAT](https://www.dostips.com/forum/viewtopic.php?f=3&t=6044) by Dave Benham
+```
