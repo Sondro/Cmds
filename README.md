@@ -14,6 +14,11 @@ II. Speed development for developers.
 ```
 ### Current Support:
 
+#### Parsing
+```
+1. Powershell
+2. JREPL.bat
+```
 #### Version Control
 ```
 1. git
@@ -39,11 +44,6 @@ II. Speed development for developers.
 #### Java
 ```
 1. jar archives
-```
-#### Parsing
-```
-1. Powershell
-2. JREPL.bat
 ```
 #### Credits
 [JREPL.BAT](https://www.dostips.com/forum/viewtopic.php?f=3&t=6044) by Dave Benham
