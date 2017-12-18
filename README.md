@@ -40,5 +40,10 @@ II. Speed development for developers.
 ```
 1. jar archives
 ```
+#### Parsing
+```
+1. Powershell
+2. JREPL.bat
+```
 #### Credits
 [JREPL.BAT](https://www.dostips.com/forum/viewtopic.php?f=3&t=6044) by Dave Benham
