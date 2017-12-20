@@ -1,5 +1,6 @@
 :: mongo --eval "printjson(db.myCollection.find(_id: 0,));"
 
+
 mongo --eval "printjson(db.myCollection.find(_id: 0,));"
 
 :: ref: https://docs.mongodb.com/manual/reference/method/db.collection.find/#examples
