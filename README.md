@@ -34,6 +34,7 @@ II. Speed development for developers.
 7. node-gyp
 8. node-pre-gyp
 9. knex
+10. chai
 ```
 #### Databases
 ```
