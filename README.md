@@ -14,10 +14,11 @@ II. Speed development for developers.
 ```
 ### Usage:
 ```
-1. Copy & paste desired .bat(s) to folder.
-2. Right click & select edit or...
-   Drag & drop onto a text editor to edit.
-3. Double click to run.
+DEPLOY: Copy & paste desired .bat(s) to folder.
+EDIT: Right click & select edit or...
+      Drag & drop the .bat onto a text editor icon.
+RUN: Double click the desired .bat.
+UPDATE: Double click __git_update_recursive_forEach.bat
 ```
 ### Current Support:
 
