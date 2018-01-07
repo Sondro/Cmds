@@ -29,12 +29,14 @@ II. Speed development for developers.
 2. npm
 3. yarn
 4. nodemon
-5. webpack
-6. react
-7. node-gyp
-8. node-pre-gyp
-9. knex
-10. chai
+5. express
+6. webpack
+7. react
+8. node-gyp
+9. node-pre-gyp
+10. knex
+11. chai
+12. morgan
 ```
 #### Databases
 ```
