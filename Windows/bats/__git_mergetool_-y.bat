@@ -1,0 +1,3 @@
+git mergetool -y
+
+@pause
