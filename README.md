@@ -12,6 +12,13 @@ II. Speed development for developers.
 [+] Add more MongoDB/Node cmds
 [+] Make reference doc
 ```
+### Usage:
+```
+1. Copy & paste desired .bat(s) to folder.
+2. Right click & select edit or...
+   Drag & drop onto a text editor to edit.
+3. Double click to run.
+```
 ### Current Support:
 
 #### Parsing
