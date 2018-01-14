@@ -1,0 +1,3 @@
+docker-machine url
+
+@pause

@@ -1,0 +1,2 @@
+yarn add knex
+@pause

@@ -1,0 +1,3 @@
+npm rebuild
+
+@pause

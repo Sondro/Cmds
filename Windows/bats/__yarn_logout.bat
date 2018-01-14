@@ -1,0 +1,3 @@
+yarn logout
+
+@pause

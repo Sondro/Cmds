@@ -1,0 +1,3 @@
+docker-machine status
+
+@pause

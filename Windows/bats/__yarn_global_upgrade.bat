@@ -1,0 +1,3 @@
+yarn global upgrade
+
+@pause

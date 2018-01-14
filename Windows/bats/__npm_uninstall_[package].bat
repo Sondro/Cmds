@@ -1,0 +1,3 @@
+npm uninstall [package]
+
+@pause

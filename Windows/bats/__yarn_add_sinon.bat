@@ -1,0 +1,2 @@
+yarn add sinon
+@pause

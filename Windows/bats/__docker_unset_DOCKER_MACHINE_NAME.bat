@@ -1,0 +1,3 @@
+unset DOCKER_MACHINE_NAME
+
+@pause

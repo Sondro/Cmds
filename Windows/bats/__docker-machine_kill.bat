@@ -1,0 +1,3 @@
+docker-machine kill
+
+@pause

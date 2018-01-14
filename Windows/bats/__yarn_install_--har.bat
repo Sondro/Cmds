@@ -1,0 +1,3 @@
+yarn install --har
+
+@pause
