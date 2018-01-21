@@ -1,3 +1,0 @@
-yarn add mongoose
-
-@pause
