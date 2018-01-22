@@ -1,5 +1,5 @@
 # [Cmds](https://github.com/Sondro/Cmds): 
-_Useful Command-lines for Programming_
+[_Useful Command-lines for Programming_](https://github.com/users/follow?target=Sondro) 
 
 ### Purpose:
 ```
@@ -14,11 +14,12 @@ II. Speed development for developers.
 ```
 ### Usage:
 ```
+GET: Clone http://github.com/Sondro/Cmds
 DEPLOY: Copy & paste desired .bat(s) to folder.
 EDIT: Right click & select edit or...
       Drag & drop the .bat onto a text editor icon.
 RUN: Double click the desired .bat.
-UPDATE: Double click __git_update_recursive_forEach.bat
+UPDATE: Double click __git_update_recursive_forEach.bat or __git_pull_origin_master_[reset].bat
 ```
 ### Current Support:
 
@@ -57,6 +58,8 @@ UPDATE: Double click __git_update_recursive_forEach.bat
 1. jar archives
 ```
 #### Credits
+[Sondro](https://github.com/users/follow?target=Sondro)
+
 [JREPL.BAT](https://www.dostips.com/forum/viewtopic.php?f=3&t=6044) by Dave Benham
 
 __git_remote_set-url_origin.bat by [Thomas Dillard](https://github.com/HTMLGhozt)
