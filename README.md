@@ -1,5 +1,5 @@
 # [Cmds](https://github.com/Sondro/Cmds): 
-[_Useful Command-lines for Programming_](https://github.com/users/follow?target=Sondro) 
+[_Useful Command-lines for Programming_](https://github.com/sondro) 
 
 ### Purpose:
 ```
@@ -58,7 +58,7 @@ UPDATE: Double click __git_update_recursive_forEach.bat or __git_pull_origin_mas
 1. jar archives
 ```
 #### Credits
-[Sondro](https://github.com/users/follow?target=Sondro)
+[Sondro](https://github.com/sondro)
 
 [JREPL.BAT](https://www.dostips.com/forum/viewtopic.php?f=3&t=6044) by Dave Benham
 
