@@ -1,0 +1,3 @@
+git merge ~abort
+
+@pause
