@@ -1,0 +1,3 @@
+git add -u
+
+@pause
