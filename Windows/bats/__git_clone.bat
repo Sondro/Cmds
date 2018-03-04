@@ -1,1 +1,1 @@
-git clone url https://www.github.com/gitProfile/gitFiles
+git clone https://www.github.com/gitProfile/gitFiles
