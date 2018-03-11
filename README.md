@@ -25,6 +25,7 @@ UPDATE: Double click __git_update_recursive_forEach.bat or __git_pull_origin_mas
 #### Version Control
 ```
 1. git
+2. Chocolatey
 ```
 #### JavaScript 
 ```
@@ -46,6 +47,10 @@ UPDATE: Double click __git_update_recursive_forEach.bat or __git_pull_origin_mas
 1. MongoDB
 2. mySQL
 3. SQLite
+```
+#### Devops
+```
+1. Docker
 ```
 #### Java
 ```
