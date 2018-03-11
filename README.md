@@ -6,12 +6,6 @@
 I. Rapid deployment for non-programmers and others short on time.
 II. Speed development for developers.
 ```
-### To-Do:
-```
-[+] Convert bat to bash (possibly using Batsh)
-[+] Add more MongoDB/Node cmds
-[+] Make reference doc
-```
 ### Usage:
 ```
 GET: Clone http://github.com/Sondro/Cmds
@@ -56,6 +50,20 @@ UPDATE: Double click __git_update_recursive_forEach.bat or __git_pull_origin_mas
 #### Java
 ```
 1. jar archives
+2. java compiling
+3. java compiling & jarring
+```
+#### Haxe [Kha]
+```
+1. Kha make html5 [WebGL]
+2. Kha make [cpp] OpenGL
+3. 
+```
+### To-Do:
+```
+[+] Convert bat to bash (possibly using Batsh)
+[+] Add more MongoDB/Node cmds
+[+] Make reference doc
 ```
 #### Credits
 [Sondro](https://github.com/sondro)
