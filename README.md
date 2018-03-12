@@ -27,6 +27,34 @@ UPDATE: Double click __git_update_recursive_forEach.bat or __git_pull_origin_mas
 1. git
 2. Chocolatey [package managment]
 ```
+#### Databases
+```
+1. MongoDB
+2. mySQL
+3. SQLite
+```
+#### Docker [Devops]
+```
+1. Docker
+2. docker-machine
+```
+#### GCC [C/C++ Windows]
+```
+1. Compile C and/or C++ 
+2. Debug C and/or C++
+```
+#### Haxe [Kha]
+```
+1. Kha make html5 [WebGL]
+2. Kha make [cpp] OpenGL
+3. Kha make [cpp] DirectSound [Windows]
+```
+#### Java
+```
+1. jar archives
+2. java compiling
+3. java compiling & jarring
+```
 #### JavaScript 
 ```
 1. node
@@ -42,29 +70,7 @@ UPDATE: Double click __git_update_recursive_forEach.bat or __git_pull_origin_mas
 11. chai
 12. morgan
 ```
-#### Databases
-```
-1. MongoDB
-2. mySQL
-3. SQLite
-```
-#### Docker [Devops]
-```
-1. Docker
-2. docker-machine
-```
-#### Java
-```
-1. jar archives
-2. java compiling
-3. java compiling & jarring
-```
-#### Haxe [Kha]
-```
-1. Kha make html5 [WebGL]
-2. Kha make [cpp] OpenGL
-3. Kha make [cpp] DirectSound [Windows]
-```
+
 ### To-Do:
 ```
 [+] Convert bat to bash (possibly using Batsh)
