@@ -8,7 +8,7 @@ II. Speed development for developers.
 ```
 ### Usage:
 |         |                                                                                   |
-| ------- | --------------------------------------------------------------------------------- |
+| :-----: | --------------------------------------------------------------------------------- |
 |`GET:`   | clone http://github.com/Sondro/Cmds                                               |
 |`DEPLOY:`| Copy & paste needed .bat(s) to folder                                             |
 |`EDIT:`  | Right click & select edit or...                                                   |
