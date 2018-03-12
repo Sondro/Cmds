@@ -16,14 +16,6 @@ II. Speed development for developers.
 |`RUN:`   | Open target .bat                                                                  |
 |`UPDATE:`| Open __git_update_recursive_forEach.bat or __git_pull_origin_master_[reset].bat   |
 
-```
-GET: Clone http://github.com/Sondro/Cmds
-DEPLOY: Copy & paste desired .bat(s) to folder.
-EDIT: Right click & select edit or...
-      Drag & drop the .bat onto a text editor icon.
-RUN: Open target .bat.
-UPDATE: Open __git_update_recursive_forEach.bat or __git_pull_origin_master_[reset].bat
-```
 ### Current Support:
 
 #### Parsing
