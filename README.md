@@ -7,13 +7,22 @@ I. Rapid deployment for non-programmers and others short on time.
 II. Speed development for developers.
 ```
 ### Usage:
+|         |                                                                                   |
+| ------- | --------------------------------------------------------------------------------- |
+|`GET:`   | clone http://github.com/Sondro/Cmds                                               |
+|`DEPLOY:`| Copy & paste needed .bat(s) to folder                                             |
+|`EDIT:`  | Right click & select edit or...                                                   |
+|   `^`   | Drag & drop the .bat onto a text editor                                           |
+|`RUN:`   | Open target .bat                                                                  |
+|`UPDATE:`| Open __git_update_recursive_forEach.bat or __git_pull_origin_master_[reset].bat   |
+
 ```
 GET: Clone http://github.com/Sondro/Cmds
 DEPLOY: Copy & paste desired .bat(s) to folder.
 EDIT: Right click & select edit or...
       Drag & drop the .bat onto a text editor icon.
-RUN: Double click the desired .bat.
-UPDATE: Double click __git_update_recursive_forEach.bat or __git_pull_origin_master_[reset].bat
+RUN: Open target .bat.
+UPDATE: Open __git_update_recursive_forEach.bat or __git_pull_origin_master_[reset].bat
 ```
 ### Current Support:
 
@@ -70,21 +79,6 @@ UPDATE: Double click __git_update_recursive_forEach.bat or __git_pull_origin_mas
 11. chai
 12. morgan
 ```
-|       |                                                                |
-| :---: | -------------------------------------------------------------- |
-|`[001]`| node                                                           |
-|`[002]`| npm                                                            |
-|`[003]`| yarn                                                           |
-|`[004]`| nodemon                                                        |
-|`[005]`| express                                                        |
-|`[006]`| webpack                                                        |
-|`[007]`| react                                                          |
-|`[008]`| nod-gyp                                                        |
-|`[009]`| knex                                                           |
-|`[010]`| chai                                                           |
-|`[011]`| morgan                                                         |
-|`[012]`| mongoose                                                       |
-
 
 ### To-Do:
 |     |                                                                |
