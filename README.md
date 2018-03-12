@@ -70,13 +70,30 @@ UPDATE: Double click __git_update_recursive_forEach.bat or __git_pull_origin_mas
 11. chai
 12. morgan
 ```
+|       |                                                                |
+| :---: | -------------------------------------------------------------- |
+|`[001]`| node                                                           |
+|`[002]`| npm                                                            |
+|`[003]`| yarn                                                           |
+|`[004]`| nodemon                                                        |
+|`[005]`| express                                                        |
+|`[006]`| webpack                                                        |
+|`[007]`| react                                                          |
+|`[008]`| nod-gyp                                                        |
+|`[009]`| knex                                                           |
+|`[010]`| chai                                                           |
+|`[011]`| morgan                                                         |
+|`[012]`| mongoose                                                       |
+
 
 ### To-Do:
-```
-[+] Convert bat to bash (possibly using Batsh)
-[+] Add more MongoDB/Node cmds
-[+] Make reference doc
-```
+|     |                                                                |
+| --- | -------------------------------------------------------------- |
+|`[+]`| Convert bat to bash (possibly using Batsh)                     |
+|`[+]`| Add more MongoDB/Node cmds                                     |
+|`[+]`| Make reference doc                                             |
+
+
 #### Credits
 [Sondro](https://github.com/sondro)
 
