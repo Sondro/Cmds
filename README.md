@@ -9,11 +9,11 @@ II. Speed development for developers.
 ### Usage:
 |         |                                                                                   |
 | :-----: | --------------------------------------------------------------------------------- |
-|`GET:`   | clone http://github.com/Sondro/Cmds                                               |
+| `GET:`  | clone http://github.com/Sondro/Cmds                                               |
 |`DEPLOY:`| Copy & paste needed .bat(s) to folder                                             |
-|`EDIT:`  | Right click & select edit or...                                                   |
+| `EDIT:` | Right click & select edit or...                                                   |
 |   `^`   | Drag & drop the .bat onto a text editor                                           |
-|`RUN:`   | Open target .bat                                                                  |
+| `RUN:`  | Open target .bat                                                                  |
 |`UPDATE:`| Open __git_update_recursive_forEach.bat or __git_pull_origin_master_[reset].bat   |
 
 ### Current Support:
