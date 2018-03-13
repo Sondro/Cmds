@@ -34,7 +34,7 @@ II. Speed development for developers.
 2. mySQL
 3. SQLite
 ```
-#### Docker [Devops]
+#### Docker [DevOps]
 ```
 1. Docker
 2. docker-machine
