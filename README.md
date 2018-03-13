@@ -2,10 +2,9 @@
 [_Useful Command-lines for Programming_](https://github.com/sondro) 
 
 ### Purpose:
-```
 I. Rapid deployment for non-programmers and others short on time.
 II. Speed development for developers.
-```
+
 ### Usage:
 |         |                                                                                   |
 | :-----: | --------------------------------------------------------------------------------- |
