@@ -71,6 +71,11 @@ II. Speed development for developers.
 11. chai
 12. morgan
 ```
+#### Python
+```
+1. Anaconda
+2. Django
+```
 
 ### To-Do:
 |     |                                                                |
