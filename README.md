@@ -18,6 +18,21 @@ II. Speed development for developers.
 
 ### Current Support:
 
+#### Databases
+```
+1. MongoDB
+2. mySQL
+3. SQLite
+```
+#### Distributed Hosting
+```
+1. Heroku
+```
+#### Docker [DevOps]
+```
+1. Docker
+2. docker-machine
+```
 #### Parsing
 ```
 1. Powershell
@@ -27,21 +42,6 @@ II. Speed development for developers.
 ```
 1. git
 2. Chocolatey [package managment]
-```
-#### Databases
-```
-1. MongoDB
-2. mySQL
-3. SQLite
-```
-#### Docker [DevOps]
-```
-1. Docker
-2. docker-machine
-```
-#### Distributed Hosting
-```
-1. Heroku
 ```
 ---------------------------
 #### GCC [C/C++ Windows]
