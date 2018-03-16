@@ -78,9 +78,10 @@ II. Speed development for developers.
 ```
 #### Python
 ```
-1. Anaconda
-2. Django
-3. django-graphene
+1. pip
+2. Anaconda
+3. Django
+4. django-graphene
 ```
 
 ### To-Do:
