@@ -17,21 +17,20 @@ II. Speed development for developers.
 |`UPDATE:`| Open __git_update_recursive_forEach.bat or __git_pull_origin_master_[reset].bat   |
 
 ### Current Support:
-
 #### Databases
 ```
 1. MongoDB
 2. mySQL
 3. SQLite
 ```
-#### Distributed Hosting
-```
-1. Heroku
-```
-#### Docker [DevOps]
+#### DevOps
 ```
 1. Docker
 2. docker-machine
+```
+#### Distributed Hosting
+```
+1. Heroku
 ```
 #### Parsing
 ```
