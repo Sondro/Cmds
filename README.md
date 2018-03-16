@@ -39,7 +39,7 @@ II. Speed development for developers.
 1. Docker
 2. docker-machine
 ```
-#### Services
+#### Distributed Hosting
 ```
 1. Heroku
 ```
