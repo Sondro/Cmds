@@ -80,7 +80,7 @@ II. Speed development for developers.
 ```
 1. Anaconda
 2. Django
-3. graphene
+3. django-graphene
 ```
 
 ### To-Do:
