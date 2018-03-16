@@ -43,10 +43,10 @@ II. Speed development for developers.
 2. Chocolatey [package managment]
 ```
 ---------------------------
-#### GCC [C/C++ Windows]
+#### C/C++
 ```
-1. Compile C and/or C++ 
-2. Debug C and/or C++
+1. gcc compile C and/or C++ 
+2. gdb debug C and/or C++
 ```
 #### Haxe
 ```
