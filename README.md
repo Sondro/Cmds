@@ -48,7 +48,7 @@ II. Speed development for developers.
 1. Compile C and/or C++ 
 2. Debug C and/or C++
 ```
-#### Haxe [Kha]
+#### Haxe
 ```
 1. Kha make html5 [WebGL]
 2. Kha make [cpp] OpenGL
