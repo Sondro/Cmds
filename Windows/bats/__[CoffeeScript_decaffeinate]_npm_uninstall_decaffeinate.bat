@@ -1,0 +1,2 @@
+npm uninstall decaffeinate
+@pause
