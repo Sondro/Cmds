@@ -1,0 +1,3 @@
+npm uninstall webpack-dev-server --save-dev
+npm install webpack-cli -D
+@pause
