@@ -4,6 +4,9 @@
 ::JREPL.BAT by Dave Benham
 ::/History
 ::
+::    2018-03-26 v7.11: Add support for /O "-|UTF-?|NB" (overwrite without BOM)
+::    2018-03-14 v7.10: Now can block BOM in ADO output files by appending |NB
+::                      to |CharSet in the /O option and OpenOutput() function.
 ::    2017-11-23 v7.9: Allow escape sequences with /T "" coupled with /XSEQ
 ::                     Added /PREPL option to augment /P behavior
 ::                     Bug fix - Force /L when /T "" used, as per documentation
@@ -151,7 +154,7 @@
 ::      /D                     - Delimiter for /N and /OFF
 ::      /E                     - match End of line
 ::      /EXC BlockList         - EXClude lines from selected blocks
-::      /F InFile[|CharSet]    - read input from a File
+::      /F InFile[|CharSet[NB]]- read input from a File
 ::      /I                     - Ignore case
 ::      /INC BlockList         - INClude lines from selected blocks
 ::      /J                     - JScript replace expressions
@@ -168,7 +171,7 @@
 ::      /M                     - Multi-line mode
 ::      /MATCH                 - Search and print each match, one per line
 ::      /N MinWidth            - prefix output with liNe numbers
-::      /O OutFile[|CharSet]   - write Output to a file
+::      /O OutFile[|CharSet[|NB]] - write Output to a file
 ::      /OFF MinWidth          - add char OFFsets to /K, /JMATCHQ, /MATCH output
 ::      /P Regex               - only search/replace strings that match a Regex
 ::      /PFLAG Flags           - set the /P regex Flags to "g", "gi", "", or "i"
@@ -289,7 +292,7 @@
 :::                 Exclude the first line that begins with DATA, ignoring case,
 :::                 and exclude the next 10 lines as well.
 :::
-:::      /F InFile[|CharSet]
+:::      /F InFile[|CharSet|[NB]]
 :::
 :::            Input is read from file InFile instead of stdin.
 :::
@@ -297,7 +300,8 @@
 :::            then the file is opened via ADO using the specified CharSet value.
 :::            JREPL still recognizes both \n and \r\n as input line terminators
 :::            when using ADO. Both ADO and the CharSet must be available on the
-:::            local system.
+:::            local system. Appending |NB to the |CharSet normally has no impact.
+:::            The |NB No BOM flag is only useful when combined with /O -.     
 :::
 :::      /I  - Ignore case when searching.
 :::
@@ -460,7 +464,7 @@
 :::
 :::            The /N option is ignored if the /M or /S option is used.
 :::
-:::      /O OutFile[|CharSet]
+:::      /O OutFile[|CharSet[|NB]]
 :::
 :::            Output is written to file OutFile instead of stdout. Any existing
 :::            OutFile is overwritten unless the /APP option is also used.
@@ -469,16 +473,19 @@
 :::            then the file is opened via ADO using the specified CharSet value.
 :::            The output line terminator still defaults to \r\n when using ADO,
 :::            and may be changed to \n with the \U option. Both ADO and the
-:::            CharSet must be available on the local system.
+:::            CharSet must be available on the local system. Unicode files
+:::            written by ADO have a BOM by default. Appending |NB (or |anyvalue)
+:::            to the CharSet blocks the BOM from being written.
 :::
 :::            If /F InFile is also used, then an OutFile value of "-" overwrites
 :::            the original InFile with the output. A value of "-" preserves the
-:::            original character set. A value of "-|" explicitly transforms the
-:::            file into the machine default character set. A "-|CharSet" value
-:::            explicitly transforms the file into the specified character set.
-:::            The output is first written to a temporary file with the same path
-:::            and name, with .new appended. Upon completion, the temp file is
-:::            moved to replace the InFile.
+:::            original input character set (and also any |NB No BOM indicator).
+:::            A value of "-|" explicitly transforms the file into the machine
+:::            default character set. A "-|CharSet[|NB]" value explicitly
+:::            transforms the file into the specified character set. The output
+:::            is first written to a temporary file with the same path and name,
+:::            with .new appended. Upon completion, the temp file is moved to
+:::            replace the InFile.
 :::
 :::            It is rarely useful, but /APP may be combined with /O -. But /APP
 :::            cannot be combined with /O "-|CharSet".
@@ -1118,7 +1125,7 @@
 :::
 :::      stderr - Equivalent to WScript.StdErr
 :::
-:::      openOutput( fileName[|CharSet] [,appendBoolean [,utfBoolean]] )
+:::      openOutput( fileName[|CharSet[|NB]] [,appendBoolean [,utfBoolean]] )
 :::
 :::               Open a new TextStream object for writing and assign it to the
 :::               output variable. If appendBoolean is truthy, then open the file
@@ -1127,7 +1134,9 @@
 :::               If |CharSet is appended to the fileName, then open the file
 :::               using ADO and the specified internet character set name. The
 :::               output variable will be set to an object that partially
-:::               emulates a TextStream object (see the input object).
+:::               emulates a TextStream object (see the input object). Unicode
+:::               written by ADO will have a BOM by default. The BOM is blocked
+:::               by appending |NB (or |anyValue) to the CharSet.
 :::
 :::               If utfBoolean is truthy, then output is encoded as unicode
 :::               (UTF-16LE). The unicode file will automatically have the BOM
@@ -1211,7 +1220,7 @@
 :::          3 = JScript runtime error
 ::/VERSION
 :::
-:::  JREPL.BAT version 7.9 was written by Dave Benham, and originally posted at
+:::  JREPL.BAT version 7.11 was written by Dave Benham, and originally posted at
 :::  http://www.dostips.com/forum/viewtopic.php?f=3&t=6044
 ::/
 
@@ -1522,16 +1531,17 @@ try {
   _g.outFile=env('/O');
   _g.outFileA=_g.outFile.split('|');
   if (_g.outFileA[0]=='-') {
-    if (_g.outFileA[1]===undefined) _g.outFileA[1]=_g.inFileA[1];
-    _g.outFile = _g.inFileA[0]+'.new'+(_g.outFileA[1]?'|'+_g.outFileA[1]:'');
+    if (_g.outFileA[1]===undefined) {_g.outFileA[1]=_g.inFileA[1]; _g.outFileA[2]=_g.inFileA[2];}
+    _g.outFile = _g.inFileA[0]+'.new'+(_g.outFileA[1]?'|'+_g.outFileA[1]:'')+(_g.outFileA[2]?'|'+_g.outFileA[2]:'');
     if (env('/APP')) fso.CopyFile( _g.inFileA[0], _g.inFileA[0]+'.new', true );
   }
   _g.tempFile='';
   _g.delim=env('/D');
   _g.term=env('/U')?'\n':'\r\n';
 
-  _g.ADOStream = function( name, mode, format) {
+  _g.ADOStream = function( name, mode, format, noBom) {
     var that = this;
+    var bomSize = 0;
     try {
       var stream = WScript.CreateObject("ADODB.Stream");
     } catch(ex) {
@@ -1544,6 +1554,10 @@ try {
     }
     stream.LineSeparator = (mode==_g.ForReading) ? 10 : -1;
     stream.Open();
+    if (mode !== _g.ForReading && noBom) {
+      stream.WriteText("");
+      stream.Position = bomSize = stream.Size;
+    }
     switch (mode) {
       case _g.ForReading:
         stream.LoadFromFile(name);
@@ -1589,7 +1603,20 @@ try {
     }
 
     this.Close = function() {
-      if (mode!==_g.ForReading) stream.SaveToFile( name, 2 );
+      if (mode!==_g.ForReading){
+        if (bomSize) {
+          var noBomStream = WScript.CreateObject("ADODB.Stream");
+          noBomStream.Type = 1;
+          noBomStream.Mode = 3;
+          noBomStream.Open();
+          stream.Position = bomSize;
+          stream.CopyTo(noBomStream);
+          noBomStream.SaveToFile( name, 2 );
+          noBomStream.Flush();
+          noBomStream.Close();
+          noBomStream = null;
+        } else stream.SaveToFile( name, 2 );
+      }
       stream.Close();
       stream=null;
     }
@@ -1600,7 +1627,7 @@ try {
     if (fileName) {
       file = fileName.split('|');
       if (file[1]) {
-        file = new _g.ADOStream( file[0], _g.ForReading, file[1] );
+        file = new _g.ADOStream( file[0], _g.ForReading, file[1], file[2] );
         return file;
       }
       else return fso.OpenTextFile( fileName, _g.ForReading, false, _g.FileFormat );
@@ -2365,7 +2392,7 @@ function openOutput( fileName, append, utf ) {
   if (output && output!==stdout) output.Close();
   if (fileName) {
     var file = fileName.split('|');
-    if (file[1]) output=new _g.ADOStream( file[0], append?_g.ForAppending:_g.ForWriting, file[1] );
+    if (file[1]) output=new _g.ADOStream( file[0], append?_g.ForAppending:_g.ForWriting, file[1], file[2] );
     else output=fso.OpenTextFile( fileName, append?_g.ForAppending:_g.ForWriting, true, utf?-1:0 );
   }
   else output=stdout;
