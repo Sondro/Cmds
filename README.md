@@ -64,17 +64,18 @@ II. Speed development for developers.
 ```
 1. node
 2. npm
-3. yarn
-4. nodemon
-5. express
-6. webpack
-7. react
-8. node-gyp
-9. node-pre-gyp
-10. knex
-11. chai
-12. morgan
-13. CoffeScript
+3. nvm
+4. yarn
+5. nodemon
+6. express
+7. webpack
+8. react
+9. node-gyp
+10. node-pre-gyp
+11. knex
+12. chai
+13. morgan
+14. CoffeScript
 ```
 #### Python
 ```
