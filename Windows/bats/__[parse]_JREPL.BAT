@@ -4,6 +4,29 @@
 ::JREPL.BAT by Dave Benham
 ::/History
 ::
+::    2019-09-13 v8.4: Bug fix - /K,/R did not work with /EXC,/INC as of v8.0
+::    2019-07-16 v8.3: Documentation correction - Binary data with null bytes may
+::                     be read via ADO.
+::    2019-06-05 v8.2: /RTN bug fix - preserve Unicode by using CHCP 65001/utf-8
+::                     to transfer value to variable unless /XFILE used.
+::    2019-05-19 v8.1: Add /VT to enable Virtual Terminal ANSI escape sequences.
+::                     Code courtesy of DosTips user aGerman (Steffen).
+::    2019-05-15 v8.0: Add /Hxxx options for highlighting matched/replaced text.
+::                     Bug fix - /OFF was wrong when used with /P.
+::                     Change - /OFF is now incompatible with /PREPL.
+::                     Change - /PREPL may now be used with /K and /R.
+::                     Doc fix - corrected syntax for /F [|NB] option.
+::                     Doc fix - /OFF is for first match if used with /K.
+::    2018-10-20 v7.15: Add a string literal syntax to the /INC and /EXC options.
+::    2018-10-15 v7.14: Bug fix - User defined variables declared in /JBEG named
+::                      str and/or obj were getting clobbered.
+::                      Bug fix - Internal variable xbytes was visibile to user
+::                      supplied JScript.
+::    2018-07-19 v7.13: Bug fix - /INC and /EXC regex failed to match any
+::                      line that immediately followed a prior block.
+::                      Added ADO code to create XBYTES.DAT in case CERTUTIL is
+::                      missing. Code courtesy of DosTips user aGerman (Steffen).
+::    2018-07-18 v7.12: Fixed XBYTES.DAT creation cleanup bugs, and improved docs
 ::    2018-03-26 v7.11: Add support for /O "-|UTF-?|NB" (overwrite without BOM)
 ::    2018-03-14 v7.10: Now can block BOM in ADO output files by appending |NB
 ::                      to |CharSet in the /O option and OpenOutput() function.
@@ -108,7 +131,7 @@
 :::JREPL  Search  Replace  [/Option  [Value]]...
 :::JREPL  /?[?][Topic|/Option|CHARSET/[Query]|HELP]
 :::
-:::  Performs a global regular expression search and replace operation on
+:::  Perform a global regular expression search and replace operation on
 :::  each line of ASCII input from stdin and prints the result to stdout.
 :::
 :::  Each parameter may be optionally enclosed by double quotes. The double
@@ -138,58 +161,68 @@
 :::            Replace substitution pattern syntax is fully documented at
 :::            https://msdn.microsoft.com/en-US/library/efy6s3e6.aspx
 :::
+:::  Binary input with NULL bytes requires either the /M option, or the file
+:::  must be read using ADO by appending the character set name to the file name.
+:::  For example, if your input is ASCII containing null bytes, then you must
+:::  use:   /F "input.txt" /M   or   /F "input.txt|ascii".
+:::
 :::  The meaning of extended ASCII byte codes >= 128 (0x80) is dependent on the
-:::  active code page. Extended ASCII within arguments and variables requires
-:::  the /XFILE option. Binary input with NULL bytes requires the /M option.
+:::  active code page. Extended ASCII within arguments and variables may require
+:::  the /XFILE option.
 ::/OPTIONS
 :::
 :::  Options:  Behavior may be altered by appending one or more options.
 :::  The option names are case insensitive, and may appear in any order
 :::  after the Replace argument.
 :::
-::      /A                     - write Altered lines only
-::      /APP                   - Append results to the output file
-::      /B                     - match Beginning of line
-::      /C                     - Count number of source lines
-::      /D                     - Delimiter for /N and /OFF
-::      /E                     - match End of line
-::      /EXC BlockList         - EXClude lines from selected blocks
-::      /F InFile[|CharSet[NB]]- read input from a File
-::      /I                     - Ignore case
-::      /INC BlockList         - INClude lines from selected blocks
-::      /J                     - JScript replace expressions
-::      /JBEG InitCode         - initialization JScript code
-::      /JBEGLN NewLineCode    - line initialization JScript code
-::      /JEND FinalCode        - finalization JScript code
-::      /JENDLN EndLineCode    - line finalization JScript code
-::      /JLIB FileList         - load file(s) of initialization code
-::      /JMATCH                - write matching JScript replacements only
-::      /JMATCHQ               - new Quick form of /JMATCH
-::      /JQ                    - new Quick form of /J
-::      /K Context or Pre:Post - search and Keep lines that match
-::      /L                     - Literal search
-::      /M                     - Multi-line mode
-::      /MATCH                 - Search and print each match, one per line
-::      /N MinWidth            - prefix output with liNe numbers
-::      /O OutFile[|CharSet[|NB]] - write Output to a file
-::      /OFF MinWidth          - add char OFFsets to /K, /JMATCHQ, /MATCH output
-::      /P Regex               - only search/replace strings that match a Regex
-::      /PFLAG Flags           - set the /P regex Flags to "g", "gi", "", or "i"
-::      /PREPL FilterReplCode  - selectively Search/Replace captured /P groups
-::      /R Context or Pre:Post - search and Reject lines that match
-::      /RTN ReturnVar[:Line#] - Return result in a variable
-::      /S VarName             - Source is read from a variable
-::      /T DelimChar or FILE   - Translate multiple search/replace pairs
-::      /TFLAG Flags           - Specify XRegExp flags for use with /T
-::      /U                     - Unix line terminators (\n instead of \r\n)
-::      /UTF                   - All input and output as UTF-16LE (BOM optional)
-::      /V                     - use Variables for Search/Replace and code
-::      /X                     - shorthand for combined /XFILE and /XSEQ
-::      /XBYTES                - force creation of new XBYTES.DAT
-::      /XBYTESOFF             - force /XSEQ \xnn to be treated as Windows-1252
-::      /XFILE                 - preserve extended ASCII in args via temp files
-::      /XREG FileList         - adds XRegExp support to JREPL
-::      /XSEQ                  - enable extended escape sequences
+::      /A                      - write Altered lines only
+::      /APP                    - Append results to the output file
+::      /B                      - match Beginning of line
+::      /C                      - Count number of source lines
+::      /D                      - Delimiter for /N and /OFF
+::      /E                      - match End of line
+::      /EXC BlockList          - EXClude lines from selected blocks
+::      /F InFile[|CharSet[|NB]]- read input from a File
+::      /H                      - Highlight replaced or matched text
+::      /HON HilightStart       - defines the string to start highlighting
+::      /HOFF HilightEnd        - defines the string to stop highlighting
+::      /HU                     - Underline replaced or matched text
+::      /I                      - Ignore case
+::      /INC BlockList          - INClude lines from selected blocks
+::      /J                      - JScript replace expressions
+::      /JBEG InitCode          - initialization JScript code
+::      /JBEGLN NewLineCode     - line initialization JScript code
+::      /JEND FinalCode         - finalization JScript code
+::      /JENDLN EndLineCode     - line finalization JScript code
+::      /JLIB FileList          - load file(s) of initialization code
+::      /JMATCH                 - write matching JScript replacements only
+::      /JMATCHQ                - new Quick form of /JMATCH
+::      /JQ                     - new Quick form of /J
+::      /K Context or Pre:Post  - search and Keep lines that match
+::      /L                      - Literal search
+::      /M                      - Multi-line mode
+::      /MATCH                  - Search and print each match, one per line
+::      /N MinWidth             - prefix output with liNe numbers
+::      /O OutFile[|CharSet[|NB]]- write Output to a file
+::      /OFF MinWidth           - add OFFsets to /K, /JMATCHQ, /MATCH output
+::      /P Regex                - only search/replace strings that match a Regex
+::      /PFLAG Flags            - set the /P regex Flags to "g", "gi", "" or "i"
+::      /PREPL FilterReplCode   - selectively Search/Replace captured /P groups
+::      /R Context or Pre:Post  - search and Reject lines that match
+::      /RTN ReturnVar[:Line#]  - Return result in a variable
+::      /S VarName              - Source is read from a variable
+::      /T DelimChar or FILE    - Translate multiple search/replace pairs
+::      /TFLAG Flags            - specify XRegExp flags for use with /T
+::      /U                      - Unix line terminators (\n instead of \r\n)
+::      /UTF                    - all input and output as UTF-16LE (BOM optional)
+::      /V                      - use Variables for Search/Replace and code
+::      /VT                     - enable Virtual Terminal ANSI escape sequences
+::      /X                      - shorthand for combined /XFILE and /XSEQ
+::      /XBYTES                 - force creation of new XBYTES.DAT
+::      /XBYTESOFF              - force /XSEQ \xnn to be treated as Windows-1252
+::      /XFILE                  - preserve extended ASCII in args via temp files
+::      /XREG FileList          - adds XRegExp support to JREPL
+::      /XSEQ                   - enable extended escape sequences
 ::/
 :::      /A  - Only write altered lines. Unaltered lines are discarded.
 :::            If the /S option is used, then write the result only if
@@ -233,48 +266,59 @@
 :::            option is incompatible with /M and /S.
 :::
 :::            The syntax for specifying a BlockList is complex. Whitespace
-:::            should not appear anywhere except for possibly within a Regex.
+:::            should not appear anywhere except for possibly within a Regex or
+:::            String.
 :::
 :::              BlockList     = {Block}[,{Block}]...
 :::              {Block}       = {SingleLine}|{LineRange}
 :::              {SingleLine}  = {LineSpec}[{Offset}]
 :::              {LineRange}   = {LineSpec}[{Offset}]:{EndLineSpec}[{Offset}]
-:::              {LineSpec}    = [-]LineNumber|/Regexp/[i][/]
-:::              {EndLineSpec} = [-]LineNumber|+Number|/Regex/[i]
+:::              {LineSpec}    = [-]LineNumber|{Regex}[/]|{String}[/]
+:::              {EndLineSpec} = [-]LineNumber|+Number|{Regex}|{String}
+:::              {Regex}       = /Regex/[i|b|e]...
+:::              {String}      = 'String'[i|b|e]...
 :::              {Offset}      = +Number|-Number
 :::
 :::            A line may be identified by its LineNumber, or by a Regex that
-:::            matches the line. Once identified, a line position may be
-:::            adjusted forward or backward via the optional Offset.
+:::            matches the line, or a String literal that is found in the line.
+:::            Once identified, a line position may be adjusted forward or
+:::            backward via the optional Offset.
 :::
 :::            A negative LineNumber is counted from the end of the file.
 :::            So 1 is the first line of input, and -1 is the last line. The /C
 :::            option is automatically activated if any block identifies a line
 :::            via a negative line number.
 :::
-:::            A Block Regex uses mostly standard JScript syntax, except all of
-:::            the escape sequences specified by the /XSEQ option are available,
-:::            even if the /XSEQ option has not been set. Any / literal within a
-:::            Regex must be escaped as \/. Each Regex may be followed by the
-:::            i flag, no other flags are allowed. The /I option is ignored.
+:::            A Block Regex uses mostly standard JScript syntax. Both a Regex
+:::            and a String may use any of the escape sequences defined by the
+:::            /XSEQ option, even if the /XSEQ option has not been set. Any /
+:::            literal within a Regex must be escaped as \/. Any ' literal
+:::            within a String must be escaped as ''.
 :::
-:::            A line or range start that is identified by a regex may match
-:::            multiple lines within the input. Only the first matching line is
-:::            used if the regex is terminated by an extra / (after any i flag).
+:::            A Regex or String may be followed by any combination of the
+:::            following flags:
+:::              i - Ignore case
+:::              b - The search must match the beginning of a line
+:::              e - The search must match the end of a line
+:::            /EXC and /INC ignore the /I option.
 :::
-:::            A Line block or Range start that is identified by a Regex cannot
-:::            have a negative Offset.
+:::            A line or range start that is identified by a Regex or String may
+:::            match multiple lines within the input. Only the first matching
+:::            line is used if the Regex or String is terminated by an extra /.
+:::
+:::            A Line block or Range start that is identified by a Regex or
+:::            String cannot have a negative Offset.
 :::
 :::            If the end of a Range is specified as + followed by a Number,
 :::            then the Number is treated as an offset from the start of the
 :::            Range (after any start Offset has been applied).
 :::
-:::            If the end of a Range is specified as a regex, then the block end
-:::            is the first line that matches after the beginning of the block.
-:::            The extra / cannot be used with an end of Range regex. The Offset
-:::            must be greater than or equal to -1 if a regex is used. If the
-:::            end of Range regex is not found, then the block continues to the
-:::            end of file.
+:::            If the end of a Range is specified as a Regex or String, then the
+:::            block end is the first line that matches after the beginning of
+:::            the block. The extra / cannot be used with an end of Range Regex
+:::            or String. The Offset must be greater than or equal to -1 if a 
+:::            Regex or String is used. If the end of Range Regex or String is
+:::            not found, then the block continues to the end of file.
 :::
 :::            Examples:
 :::
@@ -292,7 +336,15 @@
 :::                 Exclude the first line that begins with DATA, ignoring case,
 :::                 and exclude the next 10 lines as well.
 :::
-:::      /F InFile[|CharSet|[NB]]
+:::              /EXC "'[START]':'[STOP]'"
+:::                 Exclude lines beginning with a line that contains the literal
+:::                 [START] and ending with the next line that contains [STOP].
+:::
+:::              /EXC "'[START]'be:'[STOP]'be"
+:::                 Exclude lines beginning with a [START] line (exact match)
+:::                 and ending with the next [STOP] line (exact match).
+:::
+:::      /F InFile[|CharSet[|NB]]
 :::
 :::            Input is read from file InFile instead of stdin.
 :::
@@ -301,8 +353,55 @@
 :::            JREPL still recognizes both \n and \r\n as input line terminators
 :::            when using ADO. Both ADO and the CharSet must be available on the
 :::            local system. Appending |NB to the |CharSet normally has no impact.
-:::            The |NB No BOM flag is only useful when combined with /O -.     
+:::            The |NB No BOM flag is only useful when combined with /O -.
 :::
+:::            Note: Input containing null bytes cannot be read unless ADO is
+:::                  used, or else the /M option must be used.
+:::
+:::      /H  - Highlight all replaced or matched text in the output using the
+:::            strings defined by /HON and /HOFF.
+:::
+:::            /HON and /HOFF default to ANSI escape sequences that swap the
+:::            foreground and background colors.
+:::
+:::            /HU may be a better option if the current COLOR does not match
+:::            the console default.
+:::
+:::            Native support for ANSI escape sequences requires Windows 10 or
+:::            higher. ANSI escape sequences only work on the Windows 10 console
+:::            if the "Use legacy console" option is off in console properties.
+:::
+:::            In addition, one of the following must be used:
+:::
+:::             - The /VT option can be used to enable the escape sequences for
+:::               a single JREPL run.
+:::
+:::            or
+:::
+:::             - The registry can have the following DWORD defined, which will
+:::               enable escape sequences for all console applications.
+:::                  [HKEY_CURRENT_USER\Console]
+:::                  "VirtualTerminalLevel"=dword:00000001
+:::
+:::      /HON HighlightStart
+:::
+:::            Defines the string to start highlighting text, normally an ANSI
+:::            escape sequence.
+:::
+:::            Default is \x1B[7m - Swap foreground and background colors.
+:::
+:::      /HOFF HighlightEnd
+:::
+:::            Defines the string to end highlighting text, normally an ANSI
+:::            escape sequence.
+:::
+:::            Default is \x1B[0m - Return to the console default format.
+:::
+:::      /HU - Underline all replaced or matched text in the output using ANSI
+:::            escape sequences.
+:::
+:::            This is the same as using /H with /HON=\x1B[4m and /HOFF=\x1B[24m
+:::                 
 :::      /I  - Ignore case when searching.
 :::
 :::      /INC BlockList
@@ -332,6 +431,14 @@
 :::              /INC "/^DATA/i/:+10"
 :::                 Include the first line that begins with DATA, ignoring case,
 :::                 and include the next 10 lines as well.
+:::
+:::              /INC "'[START]':'[STOP]'"
+:::                 Include lines starting with a line that contains the literal
+:::                 "[START]" and ending with the next line that contains "[STOP]".
+:::
+:::              /INC "'[START]'be:'[STOP]'be"
+:::                 Include lines beginning with a "[START]" line (exact match)
+:::                 and ending with the next "[STOP]" line (exact match).
 :::
 :::      /J  - A deprecated form of /JQ that is slow because the JScript code
 :::            is executed via the eval() function each and every match. This
@@ -439,15 +546,16 @@
 :::            The /M option is incompatible with the /A option unless the /S
 :::            option is also present.
 :::
-:::            Note: If working with binary data containing NULL bytes,
-:::                  then the /M option must be used.
+:::            Note: The /M option is one method to read binary data with null
+:::                  bytes. The other option is to use ADO to read the file.
+:::                  See the /F option for more info.
 :::
 :::      /MATCH - Search and write out each matching string on a new line,
 :::            discarding any non-matching text. The Replace argument is
 :::            ignored, but is still required.
 :::
 :::            /MATCH is incompatible with /A, /J, /JQ, /JMATCH, /JMATCHQ,
-:::            /R and /T.
+:::            /K, /R and /T.
 :::
 :::      /N MinWidth
 :::
@@ -503,6 +611,10 @@
 :::            string is normally the current line. But if the /M option is used
 :::            then the source string is the entire file.
 :::
+:::            If used with /K, then the offset represents the first occurrence
+:::            of the search string within the line.
+:::            HKLM\SYSTEM\CurrentControlSet\Control\Nls\CodePage\ACP
+:::
 :::            The MinWidth value specifies the minimum number of digits to
 :::            display. The default value is 0, meaning do not display the
 :::            offset. A value of 1 displays the offsets without any zero
@@ -527,9 +639,8 @@
 :::            The /P option may be combined with /INC and/or /EXC, in which case
 :::            /P is applied after lines have been included and/or excluded.
 :::
-:::            From the standpoint of the main "Search" argument, ^ matches the
-:::            beginning of the matched filter, and $ matches the end of the
-:::            matched filter.
+:::            Within the main Search argument, ^ matches the beginning of the
+:::            matched filter, and $ matches the end of the matched filter.
 :::
 :::            Example - Substitute X for each character within curly braces,
 :::                      including the braces.
@@ -579,7 +690,7 @@
 :::
 :::            Using /P without /PREPL is the same as using /P with /PREPL "{$0}"
 :::
-:::            /PREPL cannot be used with /K or /R.
+:::            /PREPL cannot be used with /OFF.
 :::
 :::            Note that neither /V nor /XFILE apply to /PREPL.
 :::
@@ -635,6 +746,13 @@
 :::
 :::            The line terminator of the last match is suppressed if /MATCH,
 :::            /JMATCH, or /JMATCHQ is used.
+:::
+:::            /RTN uses a temporary output file to transfer the result to the
+:::            environment variable. By default the temporary file is written
+:::            as UTF-8. But the file is written using the CSCRIPT default code
+:::            page if the /XFILE option is used - the action may fail if the
+:::            result contains a character that cannot be mapped to the CSCRIPT
+:::            default code page.
 :::
 :::      /S VarName
 :::
@@ -823,6 +941,11 @@
 :::            and other internal uses. So user defined variables used with /V
 :::            must not have a name that begins with /.
 :::
+:::      /VT - Enables Virtual Terminal processing of ANSI escape sequences for
+:::            the current JREPL.bat process within the Windows 10 console. This
+:::            option is not needed if the registry has HKEY_CURRENT_USER\Console
+:::            "VirtualTerminalLevel" DWORD set to 1 in the registry.
+:::
 :::      /X  - Shorthand for combined /XFILE and /XSEQ.
 :::
 :::      /XBYTES - Force creation of a new XBYTES.DAT file for use by the /XSEQ
@@ -834,12 +957,19 @@
 :::      /XFILE - Preserves extended ASCII characters that may appear within
 :::            command line arguments and/or variables by first writing the
 :::            values to temporary files within the %TEMP% directory. Extended
-:::            ASCII values are byte codes >= 128 (0x80). This option is ignored
-:::            (no temporary files written) if /UTF is also used.
+:::            ASCII values are byte codes >= 128 (0x80).
 :::
 :::            Temporary files may be needed when the cmd.exe active code page
-:::            does not match the default character set used by the CSCRIPT
-:::            JSCRIPT engine.
+:::            does not match the default code page used by the CSCRIPT engine.
+:::            The default CSCRIPT code page is defined in the registry under
+:::            \HKLM\SYSTEM\CurrentControlSet\Control\Nls\CodePage\ACP.
+:::
+:::            The temporary files are written using the cmd.exe active code page.
+:::            The files are read using the CSCRIPT default code page. Extended
+:::            ASCII output to the console may appear wrong, but output written
+:::            to a file will be correct based on the cmd.exe active code page.
+:::
+:::            /XFILE is ignored (no temporary files written) if /UTF is used.
 :::
 :::      /XREG FileList
 :::
@@ -938,14 +1068,16 @@
 :::
 :::            JREPL automatically creates an XBYTES.DAT file containing all 256
 :::            possible byte codes. The XBYTES.DAT file is preferentially created
-:::            in "%ALLUSERSPROFILE\JREPL\" if at all possible. Otherwise the
+:::            in "%ALLUSERSPROFILE%\JREPL\" if at all possible. Otherwise the
 :::            file is created in "%TEMP%\JREPL\" instead. JREPL uses the file
 :::            to establish the correct \xnn byte code mapping for each character
 :::            set. Once created, successive runs reuse the same XBYTES.DAT file.
 :::            If the file gets corrupted, then use the /XBYTES option to force
 :::            creation of a new XBYTES.DAT file. If JREPL cannot create the file
-:::            for any reason, then JREPL defaults to using pre v7.4 behavior
-:::            where /XSEQ \xnn is interpreted as Windows-1252.
+:::            for any reason, then JREPL silently defaults to using pre v7.4
+:::            behavior where /XSEQ \xnn is interpreted as Windows-1252. Creation
+:::            of XBYTES.DAT requires either CERTUTIL.EXE or ADO. It is possible
+:::            that both may be missing from an XP machine.
 :::
 :::            Without the /XSEQ option, only standard JSCRIPT escape sequences
 :::            \\, \b, \f, \n, \r, \t, \v, \xnn, \unnnn are available for the
@@ -954,7 +1086,7 @@
 :::
 :::            Extended escape sequences are supported even when the /L option
 :::            is used. Both Search and Replace support all of the extended
-:::            escape sequences if both the /XSEQ and /L opions are combined.
+:::            escape sequences if both the /XSEQ and /L options are combined.
 :::
 :::            Extended escape sequences are not applied to JScript code when
 :::            using any of the /Jxxx options. Use the decode() function if
@@ -1220,7 +1352,7 @@
 :::          3 = JScript runtime error
 ::/VERSION
 :::
-:::  JREPL.BAT version 7.11 was written by Dave Benham, and originally posted at
+:::  JREPL.BAT version 8.4 was written by Dave Benham, and originally posted at
 :::  http://www.dostips.com/forum/viewtopic.php?f=3&t=6044
 ::/
 
@@ -1232,10 +1364,10 @@ setlocal disableDelayedExpansion
 if .%2 equ . call :help "%~1" && exit /b 0 || call :exitErr "Insufficient arguments"
 
 :: Define options
-set ^"/options= /A: /APP: /B: /C: /D:":" /E: /EXC:"" /F:"" /I: /INC:""^
-                /J: /JBEG:"" /JBEGLN:"" /JEND:"" /JENDLN:"" /JLIB:"" /JMATCH: /JMATCHQ: /JQ:^
+set ^"/options= /A: /APP: /B: /C: /D:":" /DBUG: /E: /EXC:"" /F:"" /H: /HON:"\x1B[7m" /HOFF:"\x1B[0m" /HU: /I:^
+                /INC:"" /J: /JBEG:"" /JBEGLN:"" /JEND:"" /JENDLN:"" /JLIB:"" /JMATCH: /JMATCHQ: /JQ:^
                 /K:"" /L: /M: /MATCH: /N:0 /O:"" /OFF:0 /P:"" /PFLAG:"g" /PREPL:"" /R:"" /RTN:"" /S:""^
-                /T:"none" /TFLAG:"" /U: /UTF: /V: /X: /XBYTES: /XBYTESOFF: /XFILE: /XSEQ: /XREG:"" "
+                /T:"none" /TFLAG:"" /U: /UTF: /V: /VT: /X: /XBYTES: /XBYTESOFF: /XFILE: /XSEQ: /XREG:"" ^"
 :: Set default option values
 for %%O in (%/options%) do for /f "tokens=1,* delims=:" %%A in ("%%O") do set "%%A=%%~B"
 
@@ -1270,9 +1402,10 @@ if defined /RTN if defined /O                                                   
 if defined /RTN if defined /UTF                                                    call :exitErr "/UTF and /RTN are mutually exclusive"
 if "%/EXC%%/INC%%/C%%/JBEGLN%%/JENDLN%" neq "" if "%/M%%/S%" neq ""                call :exitErr "/C, /JBEGLN, and /JENDLN cannot be used with /M or /S"
 for /f "tokens=2" %%A in ("%/J% %/JQ% %/JMATCH% %/JMATCHQ% %/K% %/R% %/MATCH%") do call :exitErr "/J, /JQ, /JMATCH, /JMATCHQ, /MATCH, /K and /R are all mutually exclusive"
-if "%/K%%/R%" neq "" if "%/A%%/M%%/PREPL%%/S%%/T%" neq "none"                      call :exitErr "/K, /R cannot be used with /A, /M, /S, /T or /PREPL"
+if "%/K%%/R%" neq "" if "%/A%%/M%%/S%%/T%" neq "none"                              call :exitErr "/K, /R cannot be used with /A, /M, /S or /T"
 if defined /MATCH if "%/A%%/T%" neq "none"                                         call :exitErr "/MATCH cannot be used with /A or /T"
 for /f delims^=giGI^ eol^= %%A in ("%/PFLAG%") do                                  call :exitErr "Invalid /PFLAG value"
+if "%/OFF%" neq "0" if defined /PREPL                                              call :exitErr "/PREPL cannot be used with /OFF"
 for /f "delims=| eol=| tokens=2*" %%A in ("%/APP%|%/O%x") do if %%A==- if .%%B neq . call :exitErr "/APP cannot be combined with /O - with CharSet"
 
 :: Transform options
@@ -1282,9 +1415,16 @@ if defined /MATCH set "/JMATCHQ=1"
 if defined /JMATCHQ set "/JMATCH=1"
 if defined /JMATCH set "/J=1"
 if defined /JQ set "/J=1"
+if "%/JMATCH%%/K%" equ "" set "/OFF=0"
 if defined /UTF set "/UTF=//u" & set "/XFILE="
 if not defined /T set "/L=1"
 if "%/M%%/S%" neq "" set "/N=0"
+if defined /HU (
+  set "/H=1"
+  set "/HON=\x1B[4m"
+  set "/HOFF=\x1B[24m"
+)
+if defined /R set "/H="
 if defined /RTN (
   setlocal enableDelayedExpansion
   for /f "eol=: delims=: tokens=1,2" %%A in ("!/RTN!") do (
@@ -1303,18 +1443,22 @@ for %%F in (
 ) do if "%%~zF" equ "256" set "/XBYTES=%%~fF" & goto :endXBytes
 
 :createXBytes
+:: Attempt to create XBYTES.DAT via CERTUTIL. If able to write to the JREPL
+:: subdirectory, but unable to create correct file, then pass task to JScript.
 for %%F in (
   "%ALLUSERSPROFILE%"
-  "%TEMPx%"
+  "%TEMP%"
   "%TMP%"
 ) do if %%F neq "" for %%F in ("%%~F\JREPL\XBYTES.DAT") do (
   del %%F
   md "%%~dpF"
   (  >"%%~dpnF.HEX" (
     for %%A in (0 1 2 3 4 5 6 7 8 9 A B C D E F) do for %%B in (0 1 2 3 4 5 6 7 8 9 A B C D E F) do echo %%A%%B
-  )) && certutil -f -decodehex "%%~dpnF.HEX" "%%~fF" && for %%G in (%%F) do if "%%~zG" equ "256" (
-    del "%%~dpnF.HEX"
+  )) && (
     set "/XBYTES=%%~fF"
+    certutil.exe -f -decodehex "%%~dpnF.HEX" "%%~fF"
+    for %%G in (%%F) do if "%%~zG" neq "256" del %%F
+    del "%%~dpnF.HEX"
     goto :endXBytes
   )
 ) >nul 2>nul
@@ -1349,7 +1493,16 @@ for /f "delims=" %%F in ("!temp!\!/LOCK::=-!") do (
   endlocal
   set "/LOCK=%%~fF"
 )
-if defined /RTN set "/O=%/LOCK%.RTN"
+if defined /RTN (
+  set "/CHCP="
+  if not defined /XFILE for /f "tokens=2 delims=:." %%P in ('chcp') do (
+    chcp 65001 >nul 2>nul && (
+      set "/CHCP=%%P"
+      chcp %%P >nul 2>nul
+    )
+  )
+  if defined /CHCP (set "/O=%/LOCK%.RTN|utf-8|nb") else set "/O=%/LOCK%.RTN"
+)
 9>&2 2>nul (
   8>"%/LOCK%" (
     2>&9 (
@@ -1405,6 +1558,7 @@ if not defined /RTN exit /b %errorlevel%
 
 ::returnVar
 if errorlevel 3 exit /b %errorlevel%
+if defined /CHCP chcp 65001 >nul 2>nul
 set "/ERR=%errorlevel%"
 set "/NORMAL="
 for /f "usebackq delims=" %%A in ("%/LOCK%.RTN") do (
@@ -1412,6 +1566,7 @@ for /f "usebackq delims=" %%A in ("%/LOCK%.RTN") do (
     set "/NORMAL=%%A"
   ) else set "/DELAYED=%%A"
 )
+chcp %/CHCP% >nul 2>nul
 for /f %%2 in (
   'copy /z "%/SCRIPT%" nul' %= This generates CR =%
 ) do for %%1 in (^"^
@@ -1478,16 +1633,16 @@ if /i "!help!" equ "regex" (
     set ^"cmd="%~f0" find repl /v /a /f "%~f0"^"
 ) else if "!help:~0,1!" equ "/" (   %= /?/Option =%
     set "find=^:::(.*)"
-    set "repl=$1"
+    set "repl=$txt=$1"
     set "help=!help:/=\/!"
     set "inc=/^^::: {6}!help!(?= |$)/i/:/^^::: {6}\/(?^!!help:~2!(?= |$))|^^::\//i-1"
     set "help=!help:\/=/!"
-    set ^"cmd=echo(^&call "%~f0" find repl /v /jmatch /inc inc /f "%~f0"^|^|echo Help not found for option %help%^"
+    set ^"cmd=echo(^&call "%~f0" find repl /v /jmatchq /inc inc /f "%~f0"^|^|echo Help not found for option %help%^"
 ) else ( %= /?Topic =%
     set "find=^:::?(.*)"
-    set "repl=$1"
+    set "repl=$txt=$1"
     set "inc=/^^::\/!help:/=\/!$/i/+1:/^^::\//-1"
-    set ^"cmd="%~f0" find repl /v /jmatch /inc inc /f "%~f0"^|^|(echo(^&echo Help not found for topic %help%^)^"
+    set ^"cmd="%~f0" find repl /v /jmatchq /inc inc /f "%~f0"^|^|(echo(^&echo Help not found for topic %help%^)^"
 )
 if defined noMore (
   setlocal
@@ -1508,8 +1663,9 @@ exit /b 0
 ************* JScript portion **********/
 var _g=new Object();
 _g.loc='';
+_g.objSh=WScript.CreateObject("WScript.Shell");
 try {
-  var env=WScript.CreateObject("WScript.Shell").Environment("Process"),
+  var env=_g.objSh.Environment("Process"),
       cnt,
       ln=0,
       skip=false,
@@ -1520,6 +1676,7 @@ try {
       stderr=WScript.Stderr,
       output,
       input;
+  if (env('/VT')!='') _g.objExec=_g.objSh.Exec("powershell.exe -nop -ep Bypass -c \"exit\"");
   _g.ForReading=1;
   _g.ForWriting=2;
   _g.ForAppending=8;
@@ -1651,7 +1808,26 @@ try {
     return val.slice(0,-2);
   }
 
-  var decode = env('/XBYTES') ?
+  _g.xbytes = env('/XBYTES');
+  if (_g.xbytes && !(fso.FileExists(_g.xbytes))) try {
+    // Unable to create file with CERTUTIL, so now try with ADO
+    var Stream=WScript.CreateObject('ADODB.Stream'),
+        Node=WScript.CreateObject('Microsoft.XMLDOM').createElement('e');
+    Node.dataType='bin.base64';
+    Node.text='AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4v'
+    + 'MDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5f'
+    + 'YGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn+AgYKDhIWGh4iJiouMjY6P'
+    + 'kJGSk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/'
+    + 'wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2Nna29zd3t/g4eLj5OXm5+jp6uvs7e7v'
+    + '8PHy8/T19vf4+fr7/P3+/w==';
+    Stream.Type=1;
+    Stream.Open();
+    Stream.Write(Node.nodeTypedValue);
+    Stream.SaveToFile(_g.xbytes);
+  } catch(e) {
+    _g.xbytes = '';
+  }
+  var decode = _g.xbytes ?
     // Default dynamic character set decode() for v7.4 and beyond
     function(str, charSet, searchSwitch) {
       function u(codeUnit) {return '\\u'+lpad(codeUnit.toString(16),4,'0');}
@@ -1660,7 +1836,7 @@ try {
           if (charSet=='default' && _g.utf) {
             _g.charMap[charSet]=false
           } else {
-            var stream = _g.openInput( env('/XBYTES')+(charSet=='default'?'':'|'+charSet) );
+            var stream = _g.openInput( _g.xbytes+(charSet=='default'?'':'|'+charSet) );
             try {
               _g.charMap[charSet] = stream.Read(256);
               stream.Close();
@@ -1816,40 +1992,25 @@ try {
   eval( _g.readVar( env('/JBEG'), env('/V'), '.JBEG' ) );
   _g.loc='';
 
-  _g.fmtNum=function(val,pad){return pad.length==0 ? '' : lpad(val,pad)+_g.delim;}
-
-  _g.writeMatch=function(str,off,lnPad,offPad) {
-    if (str!==false) {
-      _g.rtn=0;
-      output.Write(_g.fmtNum(ln,lnPad)+_g.fmtNum(off,offPad)+str+_g.term);
-    }
-  }
-
-  _g.defineObject=function(str,obj) {
-    _g.loc=' while defining '+obj;
-    eval(str);
+  _g.defineObjectInternal=function(){
+    _g.loc=' while defining '+_g.defineObjectObj;
+    eval(_g.defineObjectStr);
     _g.loc='';
   }
-
-  if (env('/PREPL')) {
-    _g.defineObject(
-      '_g.filterReplace=function(){ return '
-        + env('/PREPL').replace(/\$(\d+)/g,'arguments[$1]')
-        .replace(/{([^}]*)}/g,'($1).replace(_g.search,_g.filterReplace2)')
-        +';}'
-      ,'/PREPL'
-    );
-  } else {
-    _g.filterReplace=function(str) {
-      return str.replace(_g.search,_g.filterReplace2);
-    }
+  _g.defineObject=function(str,obj) {
+    _g.defineObjectStr=str;
+    _g.defineObjectObj=obj;
+    _g.defineObjectInternal();
   }
-  
+
   _g.main=function() {
     _g.rtn=1;
     var args=WScript.Arguments;
     var search =  env('/FindReplVar') ? _g.readVar( args.Item(0), env('/V')||env('/UTF'), '.FIND' ) : args.Item(0);
     var replace = env('/FindReplVar') ? _g.readVar( args.Item(1), env('/V')||env('/UTF'), '.REPL' ) : args.Item(1);
+    var hiLite=env('/H')!='';
+    var hiLiteOn=eval('"'+env('/HON')+'"');
+    var hiLiteOff=eval('"'+env('/HOFF')+'"');
     var multi=env('/M')!='';
     var literal=env('/L')!='';
     var alterations=env('/A')!='';
@@ -1885,54 +2046,69 @@ try {
     _g.incBlock.dynamic = false;
     _g.excBlock.dynamic = false;
     var blockMatch,
-        blockSearch = /(?:(-?\d+)|\/((?:\\\/|[^/])+)\/(i)?(\/)?)([+-]\d+)?(:(?:(-?\d+)|(\+\d+)|\/((?:\\\/|[^/])+)\/(i)?)([+-]\d+)?)?(?:,(?=.)|$)?|(.+)/g;
-    /*                    1         2                 3   4     5         6    7       8         9                 1    1                         1
-                                                                                                                   0    1                         2
+        blockSearch = /(?:(-?\d+)|(?:\/((?:\\\/|[^/])+)\/|'((?:''|[^'])+)')([ibe]*)(\/)?)([+-]\d+)?(:(?:(-?\d+)|(\+\d+)|(?:\/((?:\\\/|[^/])+)\/|'((?:''|[^'])+)')([ibe]*))([+-]\d+)?)?(?:,(?=.)|$)?|(.+)/g;
+    /*                    1            2                   3               4       5     6         7    8       9            1                   1               1        1                         1
+                                                                                                                             0                   1               2        3                         4
         line or range begin
           spec
             1 = line number
             2 = regex
-              3 = i flag
-              4 = singleton
-          5 = offset
-        6 = range end
+              4 = i|b|e flags
+              5 = singleton
+            3 = string
+              4 = i|b|e flags
+              5 = singleton
+          6 = offset
+        7 = range end
           spec
-            7 = line number
-            8 = offset from range begin
-            9 = regex
-              10 = i flag
-          11 = offset
-        12 = error
+            8 = line number
+            9 = offset from range begin
+            10 = regex
+              12 = i|b|e flags
+            11 = string
+              12 = i|b|e flags
+          13 = offset
+        14 = error
     */
     _g.Block = function(match) {
-      if (match[12]) throw new Error(210, 'Invalid block syntax');
-      this.offset=match[5]?Number(match[5]):0;
+      if (match[14]) throw new Error(210, 'Invalid block syntax');
+      this.offset=match[6]?Number(match[6]):0;
       if (match[1]) {
         this.type='lineNum';
         if ((this.spec=Number(match[1])) < 0) _g.getCount();
         this.lineNum=this.spec+this.offset+(this.spec<0?cnt+1:0);
       } else {
         this.type='regex';
-        this.spec= _g.newRegExp(decode(match[2],'input',false),match[3]);
-        this.spec.singleton=match[4]?true:false;
+        this.spec=_g.newRegExp( (match[4].search('b')+1?'^':'') + (
+            match[2] ? decode(match[2],'input',false) :
+            decode(match[3].replace(/''/g,"'"),'input',true).replace(/([.^$*+?()[{\\|])/g,"\\$1")
+          ) + (match[4].search('e')+1?'$':''),
+          match[4].search('i')+1?'i':''
+        );
+        this.spec.singleton=match[5]?true:false;
         this.lineNum=void 0;
-        if (this.offset<0) throw new Error(211, 'Regex offset cannot be negative');
+        if (this.offset<0) throw new Error(211, 'Regex/String offset cannot be negative');
       }
-      if (match[6]) {
-        this.endOffset=Number(match[11]);
-        if (match[7]) {
+      if (match[7]) {
+        this.endOffset=Number(match[13]);
+        if (match[8]) {
           this.endType='lineNum';
-          if ((this.endSpec=Number(match[7])) < 0) _g.getCount();
+          if ((this.endSpec=Number(match[8])) < 0) _g.getCount();
           this.endLineNum=this.endSpec+this.endOffset+(this.endSpec<0?cnt+1:0);
-        } else if (match[8]) {
+        } else if (match[9]) {
           this.endType='offset';
-          this.endSpec=Number(match[8]);
+          this.endSpec=Number(match[9]);
           this.endLineNum=this.lineNum+this.endSpec+this.endOffset;
         } else {
           this.endType='regex';
-          this.endSpec= _g.newRegExp(decode(match[9],'input',false),match[10]);
+          this.endSpec=_g.newRegExp( (match[12].search('b')+1?'^':'') + (
+              match[10] ? decode(match[10],'input',false) :
+              decode(match[11].replace(/''/g,"'"),'input',true).replace(/([.^$*+?()[{\\|])/g,"\\$1")
+            ) + (match[12].search('e')+1?'$':''),
+            match[12].search('i')+1?'i':''
+          );
           this.endLineNum=void 0;
-          if (this.endOffset<-1) throw new Error(212, 'End-range regex offset cannot be less than -1');
+          if (this.endOffset<-1) throw new Error(212, 'End-range Regex/String offset cannot be less than -1');
         }
       } else {
          this.endType=void 0;
@@ -1944,6 +2120,8 @@ try {
       if (blocks.dynamic==true) {
         for (var i=0; i<blocks.length; i++) {
           var block = blocks[i];
+          if (ln>block.endLineNum && block.type=='regex' && !block.spec.singleton)
+            block.lineNum=block.endLineNum=void 0;
           if (!block.lineNum && block.spec.test(str)) {
             block.lineNum = ln+block.offset;
             if (!block.endLineNum) {
@@ -1955,8 +2133,6 @@ try {
           }
           if (!block.endLineNum && ln>block.lineNum && block.endSpec.test(str))
             block.endLineNum = ln+block.endOffset;
-          if (ln>block.endLineNum && block.type=='regex' && !block.spec.singleton)
-            block.lineNum=block.endLineNum=void 0;
         }
       }
     }
@@ -1983,39 +2159,59 @@ try {
     if (env('/I')) options+='i';
 
     var lnWidth=parseInt(env('/N'),10),
-        offWidth=parseInt(env('/OFF'),10),
-        lnPad=lnWidth>0?Array(lnWidth+1).join('0'):'',
-        offPad=offWidth>0?Array(offWidth+1).join('0'):'',
-        xcnt=0, test;
-    if (krfile) {                    // KEEP or REJECT File
-      _g.loc=' loading '+(keep?'/K':'/R')+' Search file';
-      var f = _g.openInput(search);
-      search='';
-      while (!f.AtEndOfStream) {
-        str=f.ReadLine();
-        if (env('/XSEQ')) str=decode(str,'input',literal);
-        if (literal) str=str.replace(/([.^$*+?()[{\\|])/g,"\\$1");
-        if (env('/B')) str="^"+str;
-        if (env('/E')) str=str+"$";
-        search+=(search?'|':'')+str;
+        offWidth=parseInt(env('/OFF'),10);
+    if (lnWidth<0) lnWidth = 0;
+    if (offWidth<0) offWidth = 0;
+    _g.lnPrefix=lnWidth>0;
+    _g.offPrefix=offWidth>0;
+    var lnPad=lnWidth>0?'"'+(Array(lnWidth+1).join('0'))+'"':'',
+        offPad=offWidth>0?'"'+(Array(offWidth+1).join('0'))+'"':'',
+        xcnt=0, test,
+        filterMatchOffset = offWidth>0&&filter!='' ? '+_g.filterMatchOffset' : '';
+
+    function writeMatch(str,ln,lnPad,off,offPad) {
+      return 'if('+str+'!==false){_g.rtn=0;output.Write('
+           + (lnWidth==0 ? '' : 'lpad('+ln+','+lnPad+')+_g.delim+')
+           + (offWidth==0 ? '' : 'lpad('+off+','+offPad+')+_g.delim+')
+           + str+'+_g.term);}';
+    }
+
+    if (env('/VT')!='') while (_g.objExec.Status == 0) WScript.Sleep(50);
+
+    if (translate=='none') {  // Normal
+      if (hiLite && (keep||reject)) options+='g';
+      if (krfile) { // Load KEEP or REJECT File
+        _g.loc=' loading '+(keep?'/K':'/R')+' Search file';
+        var f = _g.openInput(search);
+        search='';
+        while (!f.AtEndOfStream) {
+          str=f.ReadLine();
+          if (env('/XSEQ')) str=decode(str,'input',literal);
+          if (literal) str=str.replace(/([.^$*+?()[{\\|])/g,"\\$1");
+          if (env('/B')) str="^"+str;
+          if (env('/E')) str=str+"$";
+          search+=(search?'|':'')+str;
+        }
+        f.Close();
+      } else { // Load Normal Search
+        if (env('/XSEQ')) {
+          if (!jexpr) replace=decode(replace,'output');
+          search=decode(search,'input',literal);
+        }
+        if (literal) {
+          search=search.replace(/([.^$*+?()[{\\|])/g,"\\$1");
+          if (!jexpr) replace=replace.replace(/\$/g,"$$$$");
+        }
+        if (env('/B')) search="^"+search;
+        if (env('/E')) search=search+"$";
+        _g.loc=' in Search regular expression';
       }
-      f.Close();
       search=_g.newRegExp(search,options);
       _g.loc='';
-    } else if (translate=='none') {  // Normal
-      if (env('/XSEQ')) {
-        if (!jexpr) replace=decode(replace,'output');
-        search=decode(search,'input',literal);
+      if (keep||reject){
+        jquick=jexpr=(hiLite || filter!='');
+        replace = jquick ? '$txt=$0;if(_g.matchOffset==null)_g.matchOffset=$off'+filterMatchOffset+';' : '$&';
       }
-      if (literal) {
-        search=search.replace(/([.^$*+?()[{\\|])/g,"\\$1");
-        if (!jexpr) replace=replace.replace(/\$/g,"$$$$");
-      }
-      if (env('/B')) search="^"+search;
-      if (env('/E')) search=search+"$";
-      _g.loc=' in Search regular expression';
-      search=_g.newRegExp(search,options);
-      _g.loc='';
       if (jexpr) {
         _g.loc=' in Search regular expression';
         test=_g.newRegExp('.|'+search,options);
@@ -2026,15 +2222,22 @@ try {
         _g.replFunc+=',$off,$src){_g.loc=" in Replace code";';
         if (jquick||jmatchq) {
           _g.replFunc+='var $txt;'+replace+';';
+          if (hiLite) _g.replFunc+='$txt="'+hiLiteOn+'"+$txt+"'+hiLiteOff+'";';
           _g.replFunc+=
-            jmatch ? '_g.writeMatch($txt,$off,\''+lnPad+'\',\''+offPad+'\');_g.loc="";return $0;}'
+            jmatch ? writeMatch('$txt','ln',lnPad,'$off'+filterMatchOffset,offPad)+'_g.loc="";return $0;}'
                    : '_g.loc="";return $txt;}';
-        } else _g.replFunc+=
-            jmatch ? '_g.writeMatch(eval(_g.replace),$off,\''+lnPad+'\',\''+offPad+'\');_g.loc="";return $0;}'
-                   : '_g.rtn2=eval(_g.replace);_g.loc="";return _g.rtn2;}';
+        } else {
+          var jstr = 'eval(_g.replace)';
+          if (hiLite) jstr = '"'+hiLiteOn+'"+'+jstr+'+"'+hiLiteOff+'"';
+          _g.replFunc+=
+            jmatch ? writeMatch(jstr,'ln',lnPad,'$off'+filterMatchOffset,offPad)+'_g.loc="";return $0;}'
+                   : '_g.rtn2='+jstr+';_g.loc="";return _g.rtn2;}';
+        }
         _g.defineObject(_g.replFunc,'/J or /JMATCH code');
+        _g.replace = replace;
+      } else {
+        _g.replace = hiLite ? hiLiteOn + replace + hiLiteOff : replace;
       }
-      _g.replace=replace;
     } else {                         // /T
       if (translate.toLowerCase()=='file') {
         var f
@@ -2130,13 +2333,17 @@ try {
       for (var i=1; i<j; i++) _g.replFunc+=',$'+i;
       _g.replFunc+=',$off,$src){_g.loc=" in Replace code";';
       if (jquick||jmatchq) {
-        _g.replFunc+='var $txt;'+_g.replace+ (
-           jmatch ? '_g.writeMatch($txt,$off,\''+lnPad+'\',\''+offPad+'\');_g.loc="";return $0;}'
+        _g.replFunc+='var $txt;'+_g.replace;
+        if (hiLite) _g.replFunc+='$txt="'+hiLiteOn+'"+$txt+"'+hiLiteOff+'";';
+        _g.replFunc+=(
+           jmatch ? writeMatch('$txt','ln',lnPad,'$off'+filterMatchOffset,offPad)+'_g.loc="";return $0;}'
                   : '_g.loc="";return $txt;}' );
       } else {
+        var jstr = 'eval(_g.replace[_g.i])';
+        if (hiLite) jstr = '"'+hiLiteOn+'"+'+jstr+'+"'+hiLiteOff+'"';
         _g.replFunc+='for(_g.i=1;_g.i<arguments.length-2;_g.i++)if(arguments[_g.i]!==undefined)'+ (
-           jmatch ? '{_g.writeMatch(eval(_g.replace[_g.i]),$off,\''+lnPad+'\',\''+offPad+'\');_g.loc="";return $0;}}'
-                  : '{_g.rtn2=eval(_g.replace[_g.i]);_g.loc="";return _g.rtn2;}}' );
+           jmatch ? writeMatch(jstr,'ln',lnPad,'$off'+filterMatchOffset,offPad)+'_g.loc="";return $0;}'
+                  : '{_g.rtn2='+jstr+';_g.loc="";return _g.rtn2;}}' );
       }
       _g.defineObject(_g.replFunc,'/J or /JMATCH code');
       jexpr=true;
@@ -2144,17 +2351,35 @@ try {
 
     var str1, str2;
     var repl=jexpr?_g.replFunc:_g.replace;
+
     if (filter!='') {
+      if (env('/PREPL')) {
+        _g.defineObject(
+          '_g.filterReplace=function(){ return '
+            + env('/PREPL').replace(/\$(\d+)/g,'arguments[$1]')
+            .replace(/{([^}]*)}/g,'($1).replace(_g.search,_g.filterReplace2)')
+            +';}'
+          ,'/PREPL'
+        );
+      } else if (offWidth>0) {
+        _g.filterReplace=function(str) {
+          _g.filterMatchOffset = arguments[arguments.length-2];
+          return str.replace(_g.search,_g.filterReplace2);
+        }
+      } else {
+        _g.filterReplace=function(str) {
+          return str.replace(_g.search,_g.filterReplace2);
+        }
+      }
       _g.loc=' in /P FilterRegex';
       filter = _g.newRegExp( decode(filter,'input',false), env('/PFLAG').toLowerCase()+(env('/M')?'m':'') );
       _g.loc='';
-      if (!keep&&!reject) {
-        _g.search=search;
-        search=filter;
-        _g.filterReplace2=repl;
-        repl=_g.filterReplace;
-      }
+      _g.search=search;
+      search=filter;
+      _g.filterReplace2=repl;
+      repl=_g.filterReplace;
     }
+
     if (srcVar) {
       str1=_g.readVar( srcVar, srcVar, '.S' );
       str2=str1.replace(search,repl);
@@ -2171,44 +2396,6 @@ try {
       if (!jmatch) output.Write(str2);
       if (str1!=str2) _g.rtn=0;
     } else if (keep||reject){
-    /* The following generic logic that works with all options
-
-      var match, arr, filterResult, post, pre=new Array();
-      while (!input.AtEndOfStream && !quit) {
-        match = reject;
-        str1=input.ReadLine();
-        ln++;
-        _g.setBlocks(_g.incBlock,str1);
-        _g.setBlocks(_g.excBlock,str1);
-        if (_g.begLn) str1=_g.begLn(str1);
-        if (inc() && !exc() && !skip ) {
-          if (!filter) {
-            if ((arr=search.exec(str1))!==null) match=!reject;
-          } else if (!filter.global) {
-            if ((filterResult=filter.exec(str1))!==null && (arr=search.exec(filterResult[0])!==null)) match=!reject;
-          } else {
-            filter.lastIndex=0;
-            while (match==reject && (filterResult=filter.exec(str1))!==null)
-              if ((arr=search.exec(filterResult[0]))!==null) match=!reject;
-          }
-        }
-        if (_g.endLn) str1=_g.endLn(str1);
-        if (str1!==false && match) {
-          while (pre.length) output.Write(_g.fmtNum(ln-pre.length,lnPad)+(keep&&offPad.length?lpad('',offPad.length)+_g.delim:'')+pre.pop()+_g.term);
-          output.Write(_g.fmtNum(ln,lnPad)+(keep?_g.fmtNum(arr.index,offPad):'')+str1+_g.term);
-          post=context[1];
-          _g.rtn=0
-        } else if (post>0) {
-          output.Write(_g.fmtNum(ln,lnPad)+(keep&&offPad.length?lpad('',offPad.length)+_g.delim:'')+(str1?str1:'')+_g.term);
-          post--;
-        } else if (context[0]) {
-          pre.unshift(str1?str1:'');
-          if (pre.length>context[0]) pre.pop();
-        }
-      }
-
-    Becomes the following dynamic code optimized for specific option combinations
-    */
       var match, arr, filterResult, post, pre=new Array();
       var cmd='while(!input.AtEndOfStream&&!quit){match=reject;str1=input.ReadLine();';
       if ( _g.incBlock.length || _g.excBlock.length || lnWidth
@@ -2217,58 +2404,27 @@ try {
       if (_g.incBlock.dynamic) cmd+='_g.setBlocks(_g.incBlock,str1);';
       if (_g.excBlock.dynamic) cmd+='_g.setBlocks(_g.excBlock,str1);';
       if (_g.begLn) cmd+='str1=_g.begLn(str1);';
+      if (jquick) cmd+='_g.matchOffset=null;';
       str1='';str2='if(';
       if (_g.incBlock.length) {str1+=str2+'inc()';str2='&&';}
       if (_g.excBlock.length) {str1+=str2+'!exc()';str2='&&';}
       if (_g.begLn||_g.endLn||jexpr||env(env('/V')?env('/JBEG'):'/JBEG')) {str1+=str2+'!skip';}
       if (str1) cmd+=str1+')';
-      if (!filter) {
-        cmd+='if ((arr=search.exec(str1))!==null) match=!reject;';
-      } else if (!filter.global) {
-        cmd+='if ((filterResult=filter.exec(str1))!==null && (arr=search.exec(filterResult[0])!==null)) match=!reject;';
+      if (jquick) {
+        cmd+='{str1=str1.replace(search,repl);match=_g.matchOffset!=null?!reject:reject;}';
       } else {
-        cmd+='{filter.lastIndex=0;';
-        cmd+='while (match==reject && (filterResult=filter.exec(str1))!==null)';
-        cmd+='if ((arr=search.exec(filterResult[0]))!==null) match=!reject;}';
+        cmd+='if ((arr=search.exec(str1))!==null){match=!reject;_g.matchOffset=arr.index}';
       }
       if (_g.endLn) cmd += 'str1=_g.endLn(str1);';
-      cmd+='if (str1!==false && match) {';
-      if (context[0]){
-        cmd+='while (pre.length) output.Write(';
-        if (lnWidth) cmd+='_g.fmtNum(ln-pre.length,lnPad)+';
-        if (keep&&offWidth) cmd+='lpad("",offPad.length)+_g.delim+';
-        cmd+='pre.pop()+_g.term);';
-      }
-      cmd+='output.Write(';
-      if (lnWidth) cmd+='_g.fmtNum(ln,lnPad)+';
-      if (keep&&offWidth) cmd+='_g.fmtNum(arr.index,offPad)+';
-      cmd+='str1+_g.term);_g.rtn=0;';
-      if (context[1]) {
-        cmd+='post=context[1];}else if(post>0){output.Write(';
-        if (lnWidth) cmd+='_g.fmtNum(ln,lnPad)+';
-        if (keep&&offWidth) cmd+='lpad("",offPad.length)+_g.delim+';
-        cmd+='(str1?str1:"")+_g.term);post--;';
-      }
-      if (context[0]) cmd+='}else{pre.unshift(str1?str1:"");if(pre.length>context[0])pre.pop();';
+      cmd+='if (str1!==false && match) {_g.rtn=0;';
+      if (context[0]) cmd+='while(pre.length){str2=pre.pop();'+writeMatch('str2','ln-pre.length-1',lnPad,'""',offWidth)+'}';
+      cmd+=writeMatch('str1','ln',lnPad,'_g.matchOffset',offPad);
+      if (context[1]) cmd+='post=context[1];}else if(post-->0){'+writeMatch('str1','ln',lnPad,'""',offWidth);
+      if (context[0]) cmd+='}else{pre.unshift(str1);if(pre.length>context[0])pre.pop();';
       cmd+='}}';
-      eval(cmd);
+      if (env('/DBUG')) output.WriteLine(cmd);
+      else eval(cmd);
     } else {
-    /* The following generic logic that works with all options
-
-      while (!input.AtEndOfStream && !quit) {
-        str2=str1=input.ReadLine();
-        ln++;
-        _g.setBlocks(_g.incBlock,str2);
-        _g.setBlocks(_g.excBlock,str2);
-        if (_g.begLn) str2=_g.begLn(str2);
-        if (inc() && !exc() && !skip) str2=str2.replace(search,repl);
-        if (_g.endLn) str2=_g.endLn(str2);
-        if (str2!==false && !jmatch && (!alterations || str1!=str2)) output.Write(_g.fmtNum(ln,lnPad)+str2+_g.term);
-        if (str1!=str2 && !jmatch) _g.rtn=0;
-      }
-
-    Becomes the following dynamic code optimized for specific option combinations
-    */
       var cmd='while(!input.AtEndOfStream&&!quit){str2=str1=input.ReadLine();';
       if ( _g.incBlock.length || _g.excBlock.length || lnWidth
            || _g.begLn || _g.endLn|| jexpr || env(env('/V')?env('/JEND'):'/JEND')
@@ -2285,14 +2441,15 @@ try {
       if (_g.endLn) cmd+='str2=_g.endLn(str2);';
       if (!jmatch) {
         str1='';str2='if(';
-        if (_g.begLn||jexpr) {str1+=str2+'str2!==false';str2='&&';}
+        if (_g.endLn||jexpr) {str1+=str2+'str2!==false';str2='&&';}
         if (alterations) {str1+=str2+'str1!=str2';}
         if (str1) cmd+=str1+')';
-        cmd+='output.Write('+(lnWidth>0?'_g.fmtNum(ln,lnPad)+':'')+'str2+_g.term);';
+        cmd+='output.Write('+(lnWidth>0?'lpad(ln,'+lnPad+')+_g.delim+':'')+'str2+_g.term);';
         cmd+='if (str1!=str2) _g.rtn=0;';
       }
       cmd+='}'
-      eval(cmd);
+      if (env('/DBUG')) output.WriteLine(cmd);
+      else eval(cmd);
     }
   }
 
@@ -2313,7 +2470,7 @@ try {
   if (env('/RTN')) {
     _g.rtnVar = function() {
       var val, str1, str2, buf=1024, arr, n;
-      input = fso.OpenTextFile(_g.outFile,_g.ForReading);
+      input=_g.openInput(_g.outFile)
       val='';
       while (!input.AtEndOfStream) {
         val+=input.Read(buf);
@@ -2327,7 +2484,8 @@ try {
       } else if ((env('/MATCH')||env('/JMATCH')||env('/JMATCHQ'))&&val.slice(-_g.term.length)===_g.term){
         val=val.slice(0,-_g.term.length);
       }
-      output = fso.OpenTextFile(_g.outFile,_g.ForWriting,true);
+      output=null;
+      openOutput(_g.outFile, "", 0 );
       str1='x'+val.replace(/%/g,'%3').replace(/\n/mg,'%~1').replace(/\r/mg,'%2').replace(/"/g,'%4');
       str2=str1.replace(/[!^]/g,'^$&');
       if (str2.length + env('/RTN').length > 8181) throw new Error(213, 'Result too long to fit within variable');
