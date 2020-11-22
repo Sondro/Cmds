@@ -1,2 +1,2 @@
-curl -X POST -d {} https://api.netlify.com/build_hooks/5e9f600915fc068ffc2dde1a
+curl -X POST -d {} https://api.netlify.com/build_hooks/9e9f304912fa062dcfdde23
 @pause
