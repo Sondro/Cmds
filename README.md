@@ -87,11 +87,8 @@ II. Speed development for developers.
 ```
 
 ### To-Do:
-|     |                                                                |
-| --- | -------------------------------------------------------------- |
-|- [ ] | Convert bat to bash (possibly using Batsh)                     |
-|`[+]`| Add more MongoDB/Node cmds                                     |
-|`[+]`| Make reference doc                                             |
+
+- [ ] Convert bat to bash (possibly using Batsh).                     - [ ] Add more MongoDB/Node cmds.                                     - [ ] Make reference doc.
 
 
 #### Credits
