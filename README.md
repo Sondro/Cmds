@@ -1,5 +1,5 @@
 # [Cmds](https://github.com/Sondro/Cmds): 
-[_Useful Commands for Programming_](https://github.com/Sondro/Cmds) 
+[_Useful Command-line Commands for Programming_](https://github.com/Sondro/Cmds) 
 
 ### Purpose:
 ```
