@@ -14,7 +14,7 @@ II. Speed development for developers.
 | `EDIT:` | Right click & select edit or...                                                   |
 |   `^`   | Drag & drop the .bat onto a text editor                                           |
 | `RUN:`  | Open target .bat                                                                  |
-|`UPDATE:`| Open __git_update_recursive_forEach.bat or __git_pull_origin_master_[reset].bat   |
+|`UPDATE:`| Open `__git_update_recursive_forEach.bat` or `__git_pull_origin_master_[reset].bat`   |
 
 ### Current Support:
 #### Databases
@@ -89,7 +89,7 @@ II. Speed development for developers.
 ### To-Do:
 |     |                                                                |
 | --- | -------------------------------------------------------------- |
-|`[+]`| Convert bat to bash (possibly using Batsh)                     |
+|-[ ]| Convert bat to bash (possibly using Batsh)                     |
 |`[+]`| Add more MongoDB/Node cmds                                     |
 |`[+]`| Make reference doc                                             |
 
