@@ -1,5 +1,3 @@
+if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
+
 javac *.java
-echo Main-Class: myJar >manifest.txt
-jar cvfe myJar.jar myJar *.class
-java -jar myJar.jar
-@pause

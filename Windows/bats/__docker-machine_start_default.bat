@@ -1,4 +1,4 @@
-docker-machine stop default
-docker-machine start default
+if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
 
-@pause
+docker-machine stop default
+

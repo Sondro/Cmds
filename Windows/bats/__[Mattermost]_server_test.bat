@@ -1,5 +1,4 @@
+if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
+
 chdir W:/CODE/JS/___MM/mattermost-server/
-make run-server 
-curl http://localhost:8065/api/v4/system/ping
-make stop-server
-@pause
+

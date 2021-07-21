@@ -1,11 +1,3 @@
+if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
+
 Windows Registry Editor Version 5.00
-
-[-HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.bat]
-[-HKEY_CURRENT_USER\Software\Classes\.bat]
-[-HKEY_CURRENT_USER\SOFTWARE\Classes\batfile]
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\.bat]
-@="batfile"
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\batfile\shell\open\command]
-@="\"%1\" %*"

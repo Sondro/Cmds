@@ -1,3 +1,5 @@
+if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
+
 mkdir my-app
 cd my-app/
 echo.>NUL 2>server.js 
@@ -8,4 +10,3 @@ echo.>NUL 2>readme.md
 echo.>NUL 2>routes.test.js 
 echo.>NUL 2>models.test.js
 npm init --yes
-@pause

@@ -1,4 +1,4 @@
-set /p newUpstream=Enter new branch url:
-git remote set-url origin %newUpstream%
+if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
 
-@pause
+set /p newUpstream=Enter new branch url:
+

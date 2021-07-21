@@ -1,3 +1,3 @@
+if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
+
 pip install virtualenvwrapper-win
-mkvirtualenv pyEnv00
-@pause

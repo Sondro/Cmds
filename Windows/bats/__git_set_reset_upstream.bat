@@ -1,6 +1,4 @@
-git remote add upstream https://github.com/Kode/Logos
-git fetch upstream
-git checkout master
-git reset --hard upstream/master  
-git push origin master --force 
-@pause
+if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
+
+git remote add upstream https://github.com/Kode/Logos 
+

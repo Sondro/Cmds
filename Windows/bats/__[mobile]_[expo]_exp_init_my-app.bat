@@ -1,5 +1,4 @@
-exp init my-app
-cd my-app
-exp start
+if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
 
-@pause
+exp init my-app
+

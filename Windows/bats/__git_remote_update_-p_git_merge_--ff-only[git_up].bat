@@ -1,4 +1,4 @@
-git remote update -p
-git merge --ff-only@{u}
+if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
 
-@pause
+git remote update -p
+

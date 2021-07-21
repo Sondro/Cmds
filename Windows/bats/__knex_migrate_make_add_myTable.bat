@@ -1,2 +1,4 @@
+if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
+
 knex migrate:make myTable
-@pause
+

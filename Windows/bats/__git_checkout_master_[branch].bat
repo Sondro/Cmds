@@ -1,4 +1,4 @@
-git checkout master
-git branch
+if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
 
-@pause
+git checkout master
+

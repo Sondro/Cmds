@@ -1,6 +1,5 @@
-git remote add upstream https://github.com/Repo/myGit.git
-git fetch upstream
-git pull --rebase
-git push
+if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit )
 
-@pause
+git remote add upstream https://github.com/Repo/myGit.git
+
+
