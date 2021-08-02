@@ -1,4 +1,3 @@
-if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit)
-
-
 mkvirtualenv pyEnv00
+
+if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit)

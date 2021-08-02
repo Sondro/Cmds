@@ -1,4 +1,3 @@
-if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit)
-
-
 heroku config:set SECRET_KEY=_keyHere_
+
+if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit)

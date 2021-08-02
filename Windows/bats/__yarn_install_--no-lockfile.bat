@@ -1,5 +1,3 @@
-if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit)
-
-
 yarn install --no-lockfile
 
+if not defined in_subprocess (cmd /k set in_subprocess=y ^& %0 %*) & exit)
